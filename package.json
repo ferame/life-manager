@@ -5,7 +5,8 @@
   "main": "src/index.tsx",
   "scripts": {
     "bundle": "webpack",
-    "test": "jest",
+    "test": "jest -c jest.config.js --watch",
+    "travis-test": "jest",
     "start": "webpack-dev-server --mode development --hot",
     "build": "webpack --mode production",
     "check-types": "tsc"
