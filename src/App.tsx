@@ -1,7 +1,5 @@
 import React from 'react';
 
-// import '../src/styles/index.css';
-
 class App extends React.PureComponent {
     render() {
         return (
