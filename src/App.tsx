@@ -17,14 +17,20 @@ interface AppProps {
     system: SystemState;
   }
 
+export type UpdateLocationParam = React.SyntheticEvent<{ value: string }>;
+
 class App extends React.Component<AppProps> {
     componentDidMount() {
         this.props.updateSession({
             loggedIn: true,
-            session: 'my_session',
-            userName: 'myName'
+            session: 'default_session',
+            userName: 'defaultName'
         });
     }
+
+    updateMessage = (event: UpdateLocationParam) => {
+        this.setState({ message: event.currentTarget.value });
+    };
 
     render() {
         return (
