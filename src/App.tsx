@@ -4,8 +4,15 @@ import styled from 'styled-components';
 // Redux based on https://codesandbox.io/s/w02m7jm3q7
 import { connect } from 'react-redux';
 import { AppState } from './store';
+
 import { SystemState } from './store/system/types';
 import { updateSession } from './store/system/actions';
+
+import { WeatherState } from './store/weather/types';
+import { addLocation } from './store/weather/actions';
+
+import WeatherForecast from './components/WeatherForecast';
+import LocationList from './components/LocationList';
 
 const Title = styled.h1`
     color: #292727;
@@ -13,13 +20,19 @@ const Title = styled.h1`
 `;
 
 interface AppProps {
+    addLocation: typeof addLocation;
     updateSession: typeof updateSession;
+    weather: WeatherState;
     system: SystemState;
   }
 
 export type UpdateLocationParam = React.SyntheticEvent<{ value: string }>;
 
 class App extends React.Component<AppProps> {
+    state = {
+        location: ''
+    };
+
     componentDidMount() {
         this.props.updateSession({
             loggedIn: true,
@@ -28,25 +41,42 @@ class App extends React.Component<AppProps> {
         });
     }
 
-    updateMessage = (event: UpdateLocationParam) => {
-        this.setState({ message: event.currentTarget.value });
-    };
+    updateLocation = (event: UpdateLocationParam) => {
+        this.setState({ location: event.currentTarget.value });
+    }
+
+    addLocation = (location: string) => {
+        this.props.addLocation({
+            user: this.props.system.userName,
+            location: location,
+            timestamp: new Date().getTime()
+          });
+          this.setState({ location: '' });
+    }
 
     render() {
         return (
             <div>
                 <Title data-testid='app-title' >Life Manager</Title>
                 <p>Username: {this.props.system.userName}</p>
+                <LocationList locations={this.props.weather.locations} />
+                <WeatherForecast
+                    userName={this.props.system.userName}
+                    location={this.state.location}
+                    updateLocation={this.updateLocation}
+                    addLocation={this.addLocation}
+                />
             </div>
         );
     }
 }
 
 const mapStateToProps = (state: AppState) => ({
-    system: state.system
+    system: state.system,
+    weather: state.weather
 });
 
 export default connect(
     mapStateToProps,
-    {updateSession}
+    { addLocation, updateSession }
 )(App);

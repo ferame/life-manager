@@ -1,10 +1,10 @@
 import { createStore, combineReducers } from 'redux';
 import { systemReducer } from './system/reducers';
-// import { weatherReducer } from './weather/reducers';
+import { weatherReducer } from './weather/reducers';
 
 const rootReducer = combineReducers({
-  system: systemReducer
-//   weather: weatherReducer
+  system: systemReducer,
+  weather: weatherReducer
 });
 
 export type AppState = ReturnType<typeof rootReducer>;

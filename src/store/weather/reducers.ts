@@ -9,7 +9,7 @@ import {
     locations: []
   };
 
-  export function chatReducer(
+  export function weatherReducer(
     state = initialState,
     action: LocationActionTypes
   ): WeatherState {
