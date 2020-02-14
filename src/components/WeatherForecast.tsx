@@ -25,16 +25,16 @@ const WeatherForecast: React.SFC<WeatherForcastProps> = ({
   }
 
   return (
-    <div className='chat-interface'>
+    <div className='location-interface'>
       <h3>User: {userName} </h3>
       <input
         value={location}
         onChange={updateLocation}
         onKeyPress={keyPress}
-        className='chat-input'
+        className='location-input'
         placeholder='Type a message...'
       />
-      <button onClick={send}>Send</button>
+      <button onClick={send}>Add</button>
     </div>
   );
 };
