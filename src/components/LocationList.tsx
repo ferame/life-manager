@@ -5,7 +5,7 @@ interface LocationListProps {
     locations: Location[];
 }
 
-const ChatHistory: React.SFC<LocationListProps> = ({ locations }) => {
+const LocationList: React.SFC<LocationListProps> = ({ locations }) => {
     return (
         <div className='location-list'>
             {locations.map(location => (
@@ -18,4 +18,4 @@ const ChatHistory: React.SFC<LocationListProps> = ({ locations }) => {
     );
 };
 
-export default ChatHistory;
+export default LocationList;

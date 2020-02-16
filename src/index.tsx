@@ -1,18 +1,11 @@
 import * as React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import configureStore from './store';
-import App from './App';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { render } from 'react-dom';
+import configureStore from './store/configureStore';
+import Root from './components/Root';
 
 const store = configureStore();
 
-const Root = () => (
-  <Provider store={store}>
-    <Router>
-      <Route path='/:filter?' component= {App} />
-    </Router>
-  </Provider>
+render(
+  <Root store={store} />,
+  document.getElementById('root')
 );
-
-ReactDOM.render(<Root />, document.getElementById('root'));

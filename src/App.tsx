@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 // Redux based on https://codesandbox.io/s/w02m7jm3q7
 import { connect } from 'react-redux';
-import { AppState } from './store';
+import { AppState } from './store/configureStore';
 
 import { SystemState } from './store/system/types';
 import { updateSession } from './store/system/actions';

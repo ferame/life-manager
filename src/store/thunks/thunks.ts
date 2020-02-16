@@ -1,7 +1,7 @@
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { addLocation } from '../weather/actions';
-import { AppState } from '../index';
+import { AppState } from '../configureStore';
 
 export const thunkAddLocation = (
   location: string
