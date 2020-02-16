@@ -5,7 +5,7 @@ import {
     LocationActionTypes
   } from './types';
 
-  const initialState: WeatherState = {
+  export const initialState: WeatherState = {
     locations: []
   };
 

@@ -1,6 +1,6 @@
 import { UPDATE_SESSION, SystemState, SystemActionTypes } from './types';
 
-const initialState: SystemState = {
+export const initialState: SystemState = {
   loggedIn: false,
   session: '',
   userName: ''
