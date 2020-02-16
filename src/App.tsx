@@ -14,6 +14,8 @@ import { addLocation } from './store/weather/actions';
 import WeatherForecast from './components/WeatherForecast';
 import LocationList from './components/LocationList';
 
+import { thunkAddLocation } from './store/thunks/thunks';
+
 const Title = styled.h1`
     color: #292727;
     text-align: center;
@@ -24,6 +26,7 @@ interface AppProps {
     updateSession: typeof updateSession;
     weather: WeatherState;
     system: SystemState;
+    thunkAddLocation: any;
   }
 
 export type UpdateLocationParam = React.SyntheticEvent<{ value: string }>;
@@ -39,6 +42,7 @@ class App extends React.Component<AppProps> {
             session: 'default_session',
             userName: 'defaultName'
         });
+        this.props.thunkAddLocation('Please add locations!');
     }
 
     updateLocation = (event: UpdateLocationParam) => {
@@ -78,5 +82,5 @@ const mapStateToProps = (state: AppState) => ({
 
 export default connect(
     mapStateToProps,
-    { addLocation, updateSession }
+    { addLocation, updateSession, thunkAddLocation }
 )(App);
