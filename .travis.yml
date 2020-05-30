@@ -1,9 +1,0 @@
-language: node_js
-sudo: false
-node_js:
-  - "stable"
-install:
-  - npm install
-script:
-  - npm run travis-test
-  - npm run build
