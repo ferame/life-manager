@@ -1,18 +1,15 @@
-import { render } from '@testing-library/react';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { store } from './app/store';
 import App from './App';
 
-describe('AppTest', () => {
-    it('renders without crashing', () => {
-        const div = document.createElement('div');
-        ReactDOM.render(<App />, div);
-        ReactDOM.unmountComponentAtNode(div);
-    });
+test('renders learn react link', () => {
+  const { getByText } = render(
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
 
-    it('Checks the App title', () => {
-        const {getByTestId} = render(<App />);
-        const title = getByTestId('app-title').innerHTML;
-        expect(title).toBe('Life Manager');
-    });
+  expect(getByText(/learn/i)).toBeInTheDocument();
 });
