@@ -15,4 +15,14 @@ public class BasicController {
     public BasicResponse basicEndpoint(@RequestParam(value = "text", defaultValue = "Default text") String text) {
         return new BasicResponse(counter.incrementAndGet(), text);
     }
+
+    @GetMapping("/restricted")
+    public String restrictedEndpoint() {
+        return "{message: Hello, apiState: restricted}";
+    }
+
+    @GetMapping("/unrestricted")
+    public String publicEndpoint() {
+        return "{message: Hello, apiState: public}";
+    }
 }
