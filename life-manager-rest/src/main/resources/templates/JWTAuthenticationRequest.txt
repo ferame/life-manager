@@ -1,0 +1,7 @@
+Example of restricted api endpoint: http://localhost:8080/instructors/in28minutes/courses
+
+Header has to contain:
+
+Key: Authorization
+Value: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpbjI4bWludXRlcyIsImV4cCI6MTYwNzEyMTM4OCwiaWF0IjoxNjA2NTE2NTg4fQ.RqxlCsxzO5K9KyofVASafsQlov2pFGTTb56l9bCKcuP1XNKfxs6AHIBQIzd72S9wAjdSL221ShgHU5eyJb7CfQ
+(Where the code after "Bearer" is a token provided on initial authentication request)
