@@ -27,10 +27,10 @@ public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFil
 
     @Autowired
     private UserDetailsService jwtInMemoryUserDetailsService;
-    
+
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-    
+
     @Value("${jwt.http.request.header}")
     private String tokenHeader;
 
