@@ -1,4 +1,4 @@
-package backend.app.lifemanager.security;
+package backend.app.lifemanager.security.user;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,7 +24,7 @@ public class JwtInMemoryUserDetailsService implements UserDetailsService {
         Optional<JwtUserDetails> findFirst = inMemoryUserList.stream()
                 .filter(user -> user.getUsername().equals(username)).findFirst();
 
-        if (!findFirst.isPresent()) {
+        if (findFirst.isEmpty()) {
             throw new UsernameNotFoundException(String.format("USER_NOT_FOUND '%s'.", username));
         }
 

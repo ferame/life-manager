@@ -3,6 +3,7 @@ package backend.app.lifemanager.security;
 import backend.app.lifemanager.security.token.JwtTokenRequest;
 import backend.app.lifemanager.security.token.JwtTokenResponse;
 import backend.app.lifemanager.security.token.JwtTokenUtil;
+import backend.app.lifemanager.security.user.JwtUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package backend.app.lifemanager.security.token;
 
-import backend.app.lifemanager.security.JwtUserDetails;
+import backend.app.lifemanager.security.user.JwtUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
