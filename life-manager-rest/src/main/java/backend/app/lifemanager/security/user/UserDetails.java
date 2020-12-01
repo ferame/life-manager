@@ -3,13 +3,12 @@ package backend.app.lifemanager.security.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class JwtUserDetails implements UserDetails {
+public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
 
     private static final long serialVersionUID = 5155720064139820502L;
 
@@ -18,7 +17,7 @@ public class JwtUserDetails implements UserDetails {
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public JwtUserDetails(Long id, String username, String password, String role) {
+    public UserDetails(Long id, String username, String password, String role) {
         this.id = id;
         this.username = username;
         this.password = password;

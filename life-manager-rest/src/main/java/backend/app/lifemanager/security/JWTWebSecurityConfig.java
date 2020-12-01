@@ -60,6 +60,7 @@ public class JWTWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(jwtUnAuthorizedResponseAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+                .antMatchers("/register").permitAll()
                 .antMatchers("/instructors").access("hasRole('ROLE_USER_2')")
                 .antMatchers("/unrestricted").access("hasRole('ROLE_USER_1')")
                 .anyRequest().authenticated();
