@@ -1,0 +1,8 @@
+Url to call: http://localhost:8080/authenticate
+
+Header doesn't need to contain anything
+Body has to contain:
+{
+	"username": "in28minutes",
+	"password": "dummy"
+}
