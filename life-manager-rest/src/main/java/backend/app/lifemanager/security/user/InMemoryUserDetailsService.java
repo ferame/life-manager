@@ -11,18 +11,18 @@ import java.util.Optional;
 @Service
 public class InMemoryUserDetailsService implements UserDetailsService {
 
-    static List<UserDetails> inMemoryUserList = new ArrayList<>();
+    static List<User> inMemoryUserList = new ArrayList<>();
 
     Long nextId = 1L;
 
     static {
-        inMemoryUserList.add(new UserDetails(1L, "in28minutes",
+        inMemoryUserList.add(new User(1L, "in28minutes",
                 "$2a$10$3zHzb.Npv1hfZbLEU5qsdOju/tk2je6W6PnNnY.c1ujWPcZh4PL6e", "ROLE_USER_2"));
     }
 
     @Override
     public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserDetails> findFirst = inMemoryUserList.stream()
+        Optional<User> findFirst = inMemoryUserList.stream()
                 .filter(user -> user.getUsername().equals(username)).findFirst();
 
         if (findFirst.isEmpty()) {
@@ -36,11 +36,11 @@ public class InMemoryUserDetailsService implements UserDetailsService {
         return inMemoryUserList.stream().filter(user -> user.getUsername().equals(username)).count() > 0;
     }
 
-    public Optional<UserDetails> createNewUser(UserDto userDto) {
-        Optional<UserDetails> createdUser = Optional.empty();
+    public Optional<User> createNewUser(UserDto userDto) {
+        Optional<User> createdUser = Optional.empty();
         if (!isUsernameTaken(userDto.getUsername())) {
             nextId = nextId++;
-            UserDetails newUserDetails = new UserDetails(nextId, userDto.getUsername(), userDto.getPassword(), "ROLE_USER_1");
+            User newUserDetails = new User(nextId, userDto.getUsername(), userDto.getPassword(), "ROLE_USER_1");
             inMemoryUserList.add(newUserDetails);
             createdUser = Optional.of(newUserDetails);
         }

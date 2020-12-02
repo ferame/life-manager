@@ -1,4 +1,4 @@
-package backend.app.lifemanager.security;
+package backend.app.lifemanager.security.authorization;
 
 import backend.app.lifemanager.security.token.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class JwtTokenAuthorizationOncePerRequestFilter extends OncePerRequestFilter {
+public class TokenAuthorizationOncePerRequestFilter extends OncePerRequestFilter {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
