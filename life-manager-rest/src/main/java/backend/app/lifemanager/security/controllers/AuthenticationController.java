@@ -2,12 +2,14 @@ package backend.app.lifemanager.security.controllers;
 
 import backend.app.lifemanager.dao.BasicResponse;
 import backend.app.lifemanager.security.authentication.AuthenticationException;
+import backend.app.lifemanager.security.token.JWTTokenBlacklistService;
 import backend.app.lifemanager.security.token.JwtTokenRequest;
 import backend.app.lifemanager.security.token.JwtTokenResponse;
 import backend.app.lifemanager.security.token.JwtTokenUtil;
 import backend.app.lifemanager.security.user.InMemoryUserDetailsService;
 import backend.app.lifemanager.security.user.User;
 import backend.app.lifemanager.security.user.UserDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.Optional;
 
+import static backend.app.lifemanager.security.user.InMemoryUserDetailsService.inMemoryUserList;
+
+@Slf4j
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:4200"})
 public class AuthenticationController {
@@ -34,16 +39,19 @@ public class AuthenticationController {
     private final JwtTokenUtil jwtTokenUtil;
     private final UserDetailsService jwtInMemoryUserDetailsService;
     private final InMemoryUserDetailsService inMemoryUserDetailsService;
+    private final JWTTokenBlacklistService jwtTokenBlacklistService;
 
     @Autowired
     public AuthenticationController(AuthenticationManager authenticationManager,
                                     JwtTokenUtil jwtTokenUtil,
                                     UserDetailsService jwtInMemoryUserDetailsService,
-                                    InMemoryUserDetailsService inMemoryUserDetailsService) {
+                                    InMemoryUserDetailsService inMemoryUserDetailsService,
+                                    JWTTokenBlacklistService jwtTokenBlacklistService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
         this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
         this.inMemoryUserDetailsService = inMemoryUserDetailsService;
+        this.jwtTokenBlacklistService = jwtTokenBlacklistService;
     }
 
     @PostMapping(value = "${api.user.token.create}")
@@ -67,7 +75,7 @@ public class AuthenticationController {
         String username = jwtTokenUtil.getUsernameFromToken(token);
         User user = (User) jwtInMemoryUserDetailsService.loadUserByUsername(username);
 
-        if (jwtTokenUtil.canTokenBeRefreshed(token)) {
+        if (jwtTokenUtil.canTokenBeRefreshed(token) && !jwtTokenBlacklistService.isTokenBlacklisted(token)) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
             return ResponseEntity.ok(new JwtTokenResponse(refreshedToken));
         } else {
@@ -101,9 +109,8 @@ public class AuthenticationController {
         String username = jwtTokenUtil.getUsernameFromToken(token);
         User user = (User) jwtInMemoryUserDetailsService.loadUserByUsername(username);
 
-//        TODO: implement the logout.
         BasicResponse response;
-        if (jwtTokenUtil.validateToken(token, user)) {
+        if (jwtTokenUtil.validateToken(token, user) && jwtTokenBlacklistService.addTokenToBlacklist(token)) {
             response = new BasicResponse(1L, user.getUsername() + " logged out.");
         } else {
             response = new BasicResponse(1L, "Already logged out.");
@@ -119,7 +126,7 @@ public class AuthenticationController {
     private void authenticate(String username, String password) {
         Objects.requireNonNull(username);
         Objects.requireNonNull(password);
-
+        inMemoryUserList.forEach(user -> log.info(user.getUsername()));
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {

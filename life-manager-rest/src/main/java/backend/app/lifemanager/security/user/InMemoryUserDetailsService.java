@@ -1,7 +1,10 @@
 package backend.app.lifemanager.security.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,10 +13,20 @@ import java.util.Optional;
 
 @Service
 public class InMemoryUserDetailsService implements UserDetailsService {
+//    BCryptPasswordEncoder passwordEncoder;
+    PasswordEncoder encoder;
 
-    static List<User> inMemoryUserList = new ArrayList<>();
+    @Autowired
+    public InMemoryUserDetailsService(
+//            BCryptPasswordEncoder passwordEncoder,
+            PasswordEncoder passwordEncoderBean) {
+//        this.passwordEncoder = passwordEncoder;
+        this.encoder = passwordEncoderBean;
+    }
 
-    Long nextId = 1L;
+    public static List<User> inMemoryUserList = new ArrayList<>();
+
+    Long nextId = 2L;
 
     static {
         inMemoryUserList.add(new User(1L, "in28minutes",
@@ -33,14 +46,17 @@ public class InMemoryUserDetailsService implements UserDetailsService {
     }
 
     private boolean isUsernameTaken(String username) {
-        return inMemoryUserList.stream().filter(user -> user.getUsername().equals(username)).count() > 0;
+        return inMemoryUserList.stream().anyMatch(user -> user.getUsername().equals(username));
     }
 
     public Optional<User> createNewUser(UserDto userDto) {
         Optional<User> createdUser = Optional.empty();
         if (!isUsernameTaken(userDto.getUsername())) {
             nextId = nextId++;
-            User newUserDetails = new User(nextId, userDto.getUsername(), userDto.getPassword(), "ROLE_USER_1");
+            User newUserDetails = new User(nextId,
+                    userDto.getUsername(),
+                    encoder.encode(userDto.getPassword()),
+                    "ROLE_USER_1");
             inMemoryUserList.add(newUserDetails);
             createdUser = Optional.of(newUserDetails);
         }
