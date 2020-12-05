@@ -3,8 +3,7 @@ package backend.app.lifemanager.security.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,16 +12,8 @@ import java.util.Optional;
 
 @Service
 public class InMemoryUserDetailsService implements UserDetailsService {
-//    BCryptPasswordEncoder passwordEncoder;
-    PasswordEncoder encoder;
-
     @Autowired
-    public InMemoryUserDetailsService(
-//            BCryptPasswordEncoder passwordEncoder,
-            PasswordEncoder passwordEncoderBean) {
-//        this.passwordEncoder = passwordEncoder;
-        this.encoder = passwordEncoderBean;
-    }
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public static List<User> inMemoryUserList = new ArrayList<>();
 
@@ -55,7 +46,7 @@ public class InMemoryUserDetailsService implements UserDetailsService {
             nextId = nextId++;
             User newUserDetails = new User(nextId,
                     userDto.getUsername(),
-                    encoder.encode(userDto.getPassword()),
+                    bCryptPasswordEncoder.encode(userDto.getPassword()),
                     "ROLE_USER_1");
             inMemoryUserList.add(newUserDetails);
             createdUser = Optional.of(newUserDetails);
