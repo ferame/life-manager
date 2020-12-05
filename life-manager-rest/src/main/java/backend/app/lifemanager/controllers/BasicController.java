@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/api/basic")
 public class BasicController {
     private final AtomicLong counter = new AtomicLong();
 

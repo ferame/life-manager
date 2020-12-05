@@ -65,6 +65,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register").permitAll()
                 .antMatchers("/instructors").access("hasRole('ROLE_USER_2')")
                 .antMatchers("/unrestricted").access("hasRole('ROLE_USER_1')")
+                .antMatchers("/v2/api-docs",
+                        "/configuration/ui",
+                        "/swagger-resources/**",
+                        "/configuration/security",
+                        "/swagger-ui.html",
+                        "/webjars/**").permitAll()
                 .anyRequest().authenticated();
 
         httpSecurity
