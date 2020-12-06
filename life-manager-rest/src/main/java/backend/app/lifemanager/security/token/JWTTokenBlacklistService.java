@@ -17,26 +17,26 @@ public class JWTTokenBlacklistService {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
-    final Set<BlacklistedToken> tokensBlacklist = new HashSet<>();
+    final static Set<BlacklistedToken> tokensBlacklist = new HashSet<>();
 
     public boolean addTokenToBlacklist(String token) {
         boolean actionStatus;
         Date expirationDate = jwtTokenUtil.getExpirationDateFromToken(token);
-        if (!isExpired(expirationDate)){
+        if (isExpired(expirationDate)){
+            actionStatus = false;
+        } else {
             tokensBlacklist.add(new BlacklistedToken(token, jwtTokenUtil.getExpirationDateFromToken(token)));
             actionStatus = true;
-        } else {
-            actionStatus = false;
         }
         return actionStatus;
     }
 
-    public boolean isTokenBlacklisted(String token) {
+    public static boolean isTokenBlacklisted(String token) {
         return tokensBlacklist.stream()
                 .anyMatch(blacklistedToken -> blacklistedToken.token.equals(token));
     }
 
     boolean isExpired(Date expirationDate) {
-        return expirationDate.after(clock.now());
+        return !expirationDate.after(clock.now());
     }
 }

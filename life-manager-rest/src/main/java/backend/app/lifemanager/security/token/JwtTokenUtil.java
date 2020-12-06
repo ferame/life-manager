@@ -24,6 +24,9 @@ public class JwtTokenUtil implements Serializable {
   private static final long serialVersionUID = -3301605591108950415L;
   private final Clock clock = DefaultClock.INSTANCE;
 
+  private JWTTokenBlacklistService jwtTokenBlacklistService;
+
+
   @Value("${jwt.signing.key.secret}")
   private String secret;
 
@@ -96,7 +99,10 @@ public class JwtTokenUtil implements Serializable {
   public Boolean validateToken(String token, UserDetails userDetails) {
     User user = (User) userDetails;
     final String username = getUsernameFromToken(token);
-    return (username.equals(user.getUsername()) && !isTokenExpired(token));
+    boolean isUsernameCorrect = username.equals(user.getUsername());
+    boolean isTokenExpired = isTokenExpired(token);
+    boolean isTokenBlacklisted = jwtTokenBlacklistService.isTokenBlacklisted(token);
+    return (isUsernameCorrect && !isTokenExpired && !isTokenBlacklisted);
   }
 
   public Boolean invalidateToken(String token, UserDetails userDetails) {

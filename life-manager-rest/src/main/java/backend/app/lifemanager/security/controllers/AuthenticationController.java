@@ -102,7 +102,7 @@ public class AuthenticationController {
         return response;
     }
 
-    @PostMapping(value = "${api.user.logout}")
+    @GetMapping(value = "${api.user.signout}")
     public BasicResponse logout(HttpServletRequest request) {
         String authToken = request.getHeader(tokenHeader);
         final String token = authToken.substring(7);
