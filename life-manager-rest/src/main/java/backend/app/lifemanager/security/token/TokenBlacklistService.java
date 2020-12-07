@@ -8,27 +8,34 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class JWTTokenBlacklistService {
-    JwtTokenUtil jwtTokenUtil;
+public class TokenBlacklistService {
+    TokenUtil tokenUtil;
     private final Clock clock = DefaultClock.INSTANCE;
 
     @Autowired
-    public JWTTokenBlacklistService(JwtTokenUtil jwtTokenUtil){
-        this.jwtTokenUtil = jwtTokenUtil;
+    public TokenBlacklistService(TokenUtil tokenUtil){
+        this.tokenUtil = tokenUtil;
     }
 
     final static Set<BlacklistedToken> tokensBlacklist = new HashSet<>();
 
     public boolean addTokenToBlacklist(String token) {
+//        TODO: will need to have a timer to kick of the removal of expired tokens
+        removeExpiredTokens();
         boolean actionStatus;
-        Date expirationDate = jwtTokenUtil.getExpirationDateFromToken(token);
-        if (isExpired(expirationDate)){
+        if (tokenUtil.isTokenExpired(token)){
             actionStatus = false;
         } else {
-            tokensBlacklist.add(new BlacklistedToken(token, jwtTokenUtil.getExpirationDateFromToken(token)));
+            tokensBlacklist.add(new BlacklistedToken(token, tokenUtil.getExpirationDateFromToken(token)));
             actionStatus = true;
         }
         return actionStatus;
+    }
+
+    private void removeExpiredTokens() {
+        tokensBlacklist.stream()
+                .filter(blacklistedToken -> tokenUtil.isTokenExpired(blacklistedToken.getToken()))
+                .forEach(expiredToken -> tokensBlacklist.remove(expiredToken));
     }
 
     public static boolean isTokenBlacklisted(String token) {

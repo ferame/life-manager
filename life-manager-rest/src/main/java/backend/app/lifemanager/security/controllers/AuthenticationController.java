@@ -1,11 +1,11 @@
 package backend.app.lifemanager.security.controllers;
 
-import backend.app.lifemanager.dao.BasicResponse;
+import backend.app.lifemanager.basic.BasicResponse;
 import backend.app.lifemanager.security.authentication.AuthenticationException;
-import backend.app.lifemanager.security.token.JWTTokenBlacklistService;
-import backend.app.lifemanager.security.token.JwtTokenRequest;
-import backend.app.lifemanager.security.token.JwtTokenResponse;
-import backend.app.lifemanager.security.token.JwtTokenUtil;
+import backend.app.lifemanager.security.token.TokenBlacklistService;
+import backend.app.lifemanager.security.token.TokenRequest;
+import backend.app.lifemanager.security.token.TokenResponse;
+import backend.app.lifemanager.security.token.TokenUtil;
 import backend.app.lifemanager.security.user.InMemoryUserDetailsService;
 import backend.app.lifemanager.security.user.User;
 import backend.app.lifemanager.security.user.UserDto;
@@ -36,26 +36,26 @@ public class AuthenticationController {
     private String tokenHeader;
 
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final TokenUtil tokenUtil;
     private final UserDetailsService jwtInMemoryUserDetailsService;
     private final InMemoryUserDetailsService inMemoryUserDetailsService;
-    private final JWTTokenBlacklistService jwtTokenBlacklistService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Autowired
     public AuthenticationController(AuthenticationManager authenticationManager,
-                                    JwtTokenUtil jwtTokenUtil,
+                                    TokenUtil tokenUtil,
                                     UserDetailsService jwtInMemoryUserDetailsService,
                                     InMemoryUserDetailsService inMemoryUserDetailsService,
-                                    JWTTokenBlacklistService jwtTokenBlacklistService) {
+                                    TokenBlacklistService tokenBlacklistService) {
         this.authenticationManager = authenticationManager;
-        this.jwtTokenUtil = jwtTokenUtil;
+        this.tokenUtil = tokenUtil;
         this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
         this.inMemoryUserDetailsService = inMemoryUserDetailsService;
-        this.jwtTokenBlacklistService = jwtTokenBlacklistService;
+        this.tokenBlacklistService = tokenBlacklistService;
     }
 
     @PostMapping(value = "${api.user.token.create}")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtTokenRequest authenticationRequest)
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody TokenRequest authenticationRequest)
             throws AuthenticationException {
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -63,21 +63,21 @@ public class AuthenticationController {
         final org.springframework.security.core.userdetails.UserDetails userDetails = jwtInMemoryUserDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
 
-        final String token = jwtTokenUtil.generateToken(userDetails);
+        final String token = tokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new JwtTokenResponse(token));
+        return ResponseEntity.ok(new TokenResponse(token));
     }
 
     @GetMapping(value = "${api.user.token.refresh}")
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String authToken = request.getHeader(tokenHeader);
         final String token = authToken.substring(7);
-        String username = jwtTokenUtil.getUsernameFromToken(token);
+        String username = tokenUtil.getUsernameFromToken(token);
         User user = (User) jwtInMemoryUserDetailsService.loadUserByUsername(username);
 
-        if (jwtTokenUtil.canTokenBeRefreshed(token) && !jwtTokenBlacklistService.isTokenBlacklisted(token)) {
-            String refreshedToken = jwtTokenUtil.refreshToken(token);
-            return ResponseEntity.ok(new JwtTokenResponse(refreshedToken));
+        if (tokenUtil.canTokenBeRefreshed(token) && !tokenBlacklistService.isTokenBlacklisted(token)) {
+            String refreshedToken = tokenUtil.refreshToken(token);
+            return ResponseEntity.ok(new TokenResponse(refreshedToken));
         } else {
             return ResponseEntity.badRequest().body(null);
         }
@@ -106,11 +106,11 @@ public class AuthenticationController {
     public BasicResponse logout(HttpServletRequest request) {
         String authToken = request.getHeader(tokenHeader);
         final String token = authToken.substring(7);
-        String username = jwtTokenUtil.getUsernameFromToken(token);
+        String username = tokenUtil.getUsernameFromToken(token);
         User user = (User) jwtInMemoryUserDetailsService.loadUserByUsername(username);
 
         BasicResponse response;
-        if (jwtTokenUtil.validateToken(token, user) && jwtTokenBlacklistService.addTokenToBlacklist(token)) {
+        if (tokenUtil.validateToken(token, user) && tokenBlacklistService.addTokenToBlacklist(token)) {
             response = new BasicResponse(1L, user.getUsername() + " logged out.");
         } else {
             response = new BasicResponse(1L, "Already logged out.");

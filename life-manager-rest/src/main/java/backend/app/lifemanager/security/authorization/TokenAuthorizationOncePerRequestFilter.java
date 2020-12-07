@@ -1,6 +1,6 @@
 package backend.app.lifemanager.security.authorization;
 
-import backend.app.lifemanager.security.token.JwtTokenUtil;
+import backend.app.lifemanager.security.token.TokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class TokenAuthorizationOncePerRequestFilter extends OncePerRequestFilter
     private UserDetailsService jwtInMemoryUserDetailsService;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private TokenUtil tokenUtil;
 
     @Value("${jwt.http.request.header}")
     private String tokenHeader;
@@ -45,7 +45,7 @@ public class TokenAuthorizationOncePerRequestFilter extends OncePerRequestFilter
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
-                username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+                username = tokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
                 logger.error("JWT_TOKEN_UNABLE_TO_GET_USERNAME", e);
             } catch (ExpiredJwtException e) {
@@ -60,7 +60,7 @@ public class TokenAuthorizationOncePerRequestFilter extends OncePerRequestFilter
 
             UserDetails userDetails = this.jwtInMemoryUserDetailsService.loadUserByUsername(username);
 
-            if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+            if (tokenUtil.validateToken(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

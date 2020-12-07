@@ -1,6 +1,5 @@
-package backend.app.lifemanager.controllers;
+package backend.app.lifemanager.basic;
 
-import backend.app.lifemanager.dao.BasicResponse;
 import backend.app.lifemanager.security.authentication.IAuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
