@@ -17,12 +17,15 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
-public class JwtTokenUtil implements Serializable {
+public class TokenUtil implements Serializable {
 
   static final String CLAIM_KEY_USERNAME = "sub";
   static final String CLAIM_KEY_CREATED = "iat";
   private static final long serialVersionUID = -3301605591108950415L;
   private final Clock clock = DefaultClock.INSTANCE;
+
+  private TokenBlacklistService tokenBlacklistService;
+
 
   @Value("${jwt.signing.key.secret}")
   private String secret;
@@ -51,7 +54,7 @@ public class JwtTokenUtil implements Serializable {
     return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
   }
 
-  private Boolean isTokenExpired(String token) {
+  public Boolean isTokenExpired(String token) {
     final Date expiration = getExpirationDateFromToken(token);
     return expiration.before(clock.now());
   }
@@ -96,7 +99,10 @@ public class JwtTokenUtil implements Serializable {
   public Boolean validateToken(String token, UserDetails userDetails) {
     User user = (User) userDetails;
     final String username = getUsernameFromToken(token);
-    return (username.equals(user.getUsername()) && !isTokenExpired(token));
+    boolean isUsernameCorrect = username.equals(user.getUsername());
+    boolean isTokenExpired = isTokenExpired(token);
+    boolean isTokenBlacklisted = tokenBlacklistService.isTokenBlacklisted(token);
+    return (isUsernameCorrect && !isTokenExpired && !isTokenBlacklisted);
   }
 
   public Boolean invalidateToken(String token, UserDetails userDetails) {

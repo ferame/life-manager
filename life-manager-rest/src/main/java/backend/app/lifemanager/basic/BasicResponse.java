@@ -1,4 +1,4 @@
-package backend.app.lifemanager.dao;
+package backend.app.lifemanager.basic;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
