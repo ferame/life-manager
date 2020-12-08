@@ -1,4 +1,4 @@
-package backend.app.lifemanager.security.token;
+package backend.app.lifemanager.security.blacklist;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

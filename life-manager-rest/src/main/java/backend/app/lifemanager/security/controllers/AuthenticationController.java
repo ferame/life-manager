@@ -2,7 +2,7 @@ package backend.app.lifemanager.security.controllers;
 
 import backend.app.lifemanager.basic.BasicResponse;
 import backend.app.lifemanager.security.authentication.AuthenticationException;
-import backend.app.lifemanager.security.token.TokenBlacklistService;
+import backend.app.lifemanager.security.blacklist.DisabledTokenService;
 import backend.app.lifemanager.security.token.TokenRequest;
 import backend.app.lifemanager.security.token.TokenResponse;
 import backend.app.lifemanager.security.token.TokenUtil;
@@ -39,19 +39,19 @@ public class AuthenticationController {
     private final TokenUtil tokenUtil;
     private final UserDetailsService jwtInMemoryUserDetailsService;
     private final InMemoryUserDetailsService inMemoryUserDetailsService;
-    private final TokenBlacklistService tokenBlacklistService;
+    private final DisabledTokenService disabledTokenService;
 
     @Autowired
     public AuthenticationController(AuthenticationManager authenticationManager,
                                     TokenUtil tokenUtil,
                                     UserDetailsService jwtInMemoryUserDetailsService,
                                     InMemoryUserDetailsService inMemoryUserDetailsService,
-                                    TokenBlacklistService tokenBlacklistService) {
+                                    DisabledTokenService disabledTokenService) {
         this.authenticationManager = authenticationManager;
         this.tokenUtil = tokenUtil;
         this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
         this.inMemoryUserDetailsService = inMemoryUserDetailsService;
-        this.tokenBlacklistService = tokenBlacklistService;
+        this.disabledTokenService = disabledTokenService;
     }
 
     @PostMapping(value = "${api.user.token.create}")
@@ -75,7 +75,7 @@ public class AuthenticationController {
         String username = tokenUtil.getUsernameFromToken(token);
         User user = (User) jwtInMemoryUserDetailsService.loadUserByUsername(username);
 
-        if (tokenUtil.canTokenBeRefreshed(token) && !tokenBlacklistService.isTokenBlacklisted(token)) {
+        if (tokenUtil.canTokenBeRefreshed(token) && !disabledTokenService.isTokenDisabled(token)) {
             String refreshedToken = tokenUtil.refreshToken(token);
             return ResponseEntity.ok(new TokenResponse(refreshedToken));
         } else {
@@ -110,7 +110,7 @@ public class AuthenticationController {
         User user = (User) jwtInMemoryUserDetailsService.loadUserByUsername(username);
 
         BasicResponse response;
-        if (tokenUtil.validateToken(token, user) && tokenBlacklistService.addTokenToBlacklist(token)) {
+        if (tokenUtil.validateToken(token, user) && disabledTokenService.disableToken(token)) {
             response = new BasicResponse(1L, user.getUsername() + " logged out.");
         } else {
             response = new BasicResponse(1L, "Already logged out.");
