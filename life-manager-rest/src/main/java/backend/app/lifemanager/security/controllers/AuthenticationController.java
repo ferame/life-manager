@@ -2,7 +2,7 @@ package backend.app.lifemanager.security.controllers;
 
 import backend.app.lifemanager.basic.BasicResponse;
 import backend.app.lifemanager.security.authentication.AuthenticationException;
-import backend.app.lifemanager.security.blacklist.DisabledTokenService;
+import backend.app.lifemanager.security.disabled.token.DisabledTokenService;
 import backend.app.lifemanager.security.token.TokenRequest;
 import backend.app.lifemanager.security.token.TokenResponse;
 import backend.app.lifemanager.security.token.TokenUtil;

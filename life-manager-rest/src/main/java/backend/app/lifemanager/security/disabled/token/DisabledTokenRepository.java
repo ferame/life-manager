@@ -1,4 +1,4 @@
-package backend.app.lifemanager.security.blacklist;
+package backend.app.lifemanager.security.disabled.token;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

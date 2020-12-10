@@ -1,6 +1,6 @@
 package backend.app.lifemanager.security.token;
 
-import backend.app.lifemanager.security.blacklist.DisabledTokenService;
+import backend.app.lifemanager.security.disabled.token.DisabledTokenService;
 import backend.app.lifemanager.security.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;

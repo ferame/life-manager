@@ -1,4 +1,4 @@
-package backend.app.lifemanager.security.blacklist;
+package backend.app.lifemanager.security.disabled.token;
 
 import backend.app.lifemanager.security.token.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
