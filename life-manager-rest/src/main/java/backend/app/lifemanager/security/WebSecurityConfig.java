@@ -24,17 +24,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UnauthorizedResponseAuthenticationEntryPoint jwtUnAuthorizedResponseAuthenticationEntryPoint;
-
-    @Autowired
-    private UserDetailsService jwtInMemoryUserDetailsService;
-
-    @Autowired
-    private TokenAuthorizationOncePerRequestFilter jwtAuthenticationTokenFilter;
+    private final UnauthorizedResponseAuthenticationEntryPoint jwtUnAuthorizedResponseAuthenticationEntryPoint;
+    private final UserDetailsService jwtInMemoryUserDetailsService;
+    private final TokenAuthorizationOncePerRequestFilter jwtAuthenticationTokenFilter;
 
     @Value("${api.user.token.create}")
     private String authenticationPath;
+
+    @Autowired
+    public WebSecurityConfig(UnauthorizedResponseAuthenticationEntryPoint jwtUnAuthorizedResponseAuthenticationEntryPoint,
+                             UserDetailsService jwtInMemoryUserDetailsService,
+                             TokenAuthorizationOncePerRequestFilter jwtAuthenticationTokenFilter) {
+        this.jwtUnAuthorizedResponseAuthenticationEntryPoint = jwtUnAuthorizedResponseAuthenticationEntryPoint;
+        this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
+        this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
+    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -45,8 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder;
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
