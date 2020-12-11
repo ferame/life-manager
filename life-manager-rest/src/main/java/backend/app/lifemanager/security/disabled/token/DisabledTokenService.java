@@ -1,8 +1,10 @@
 package backend.app.lifemanager.security.disabled.token;
 
+import backend.app.lifemanager.security.disabled.token.model.DisabledToken;
 import backend.app.lifemanager.security.token.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 public class DisabledTokenService {
@@ -16,19 +18,26 @@ public class DisabledTokenService {
         this.tokenUtil = tokenUtil;
     }
 
-    public boolean disableToken(String token) {
-        removeExpiredDisabledTokens();
-        boolean actionStatus;
-        if (tokenUtil.isTokenExpired(token)) {
-            actionStatus = false;
-        } else {
-            DisabledToken disabledToken = new DisabledToken(token, tokenUtil.getExpirationDateFromToken(token));
-            if (disabledTokenRepository.findById(token).isEmpty()) {
-                disabledTokenRepository.save(disabledToken);
-            }
-            actionStatus = true;
-        }
-        return actionStatus;
+
+
+    public void disableToken(String token){
+        Mono<Boolean> result = reactiveValueOps.set(token,
+                new DisabledToken(token, tokenUtil.getExpirationDateFromToken(token)));
+    }
+
+//    public boolean disableToken(String token) {
+//        removeExpiredDisabledTokens();
+//        boolean actionStatus;
+//        if (tokenUtil.isTokenExpired(token)) {
+//            actionStatus = false;
+//        } else {
+//            DisabledToken disabledToken = new DisabledToken(token, tokenUtil.getExpirationDateFromToken(token));
+//            if (disabledTokenRepository.findById(token).isEmpty()) {
+//                disabledTokenRepository.save(disabledToken);
+//            }
+//            actionStatus = true;
+//        }
+//        return actionStatus;
     }
 
     private void removeExpiredDisabledTokens() {
