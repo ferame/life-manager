@@ -2,7 +2,6 @@ package backend.app.lifemanager.security;
 
 import backend.app.lifemanager.security.authorization.TokenAuthorizationOncePerRequestFilter;
 import backend.app.lifemanager.security.authorization.UnauthorizedResponseAuthenticationEntryPoint;
-import backend.app.lifemanager.security.encoder.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +27,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UnauthorizedResponseAuthenticationEntryPoint jwtUnAuthorizedResponseAuthenticationEntryPoint;
     private final UserDetailsService jwtInMemoryUserDetailsService;
     private final TokenAuthorizationOncePerRequestFilter jwtAuthenticationTokenFilter;
-    private final PasswordEncoder passwordEncoder;
 
     @Value("${api.user.token.create}")
     private String authenticationPath;
@@ -36,25 +34,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public WebSecurityConfig(UnauthorizedResponseAuthenticationEntryPoint jwtUnAuthorizedResponseAuthenticationEntryPoint,
                              UserDetailsService jwtInMemoryUserDetailsService,
-                             TokenAuthorizationOncePerRequestFilter jwtAuthenticationTokenFilter,
-                             PasswordEncoder passwordEncoder) {
+                             TokenAuthorizationOncePerRequestFilter jwtAuthenticationTokenFilter) {
         this.jwtUnAuthorizedResponseAuthenticationEntryPoint = jwtUnAuthorizedResponseAuthenticationEntryPoint;
         this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
         this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .userDetailsService(jwtInMemoryUserDetailsService)
-                .passwordEncoder(passwordEncoder.passwordEncoder());
+                .passwordEncoder(passwordEncoder());
     }
-//
-//    @Bean
-//    public BCryptPasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     @Override

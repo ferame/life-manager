@@ -1,9 +1,10 @@
 package backend.app.lifemanager.security.user;
 
-import backend.app.lifemanager.security.encoder.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,12 +13,10 @@ import java.util.Optional;
 
 @Service
 public class InMemoryUserDetailsService implements UserDetailsService {
-    private PasswordEncoder passwordEncoder;
 
+    @Lazy
     @Autowired
-    InMemoryUserDetailsService (PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
+    private PasswordEncoder passwordEncoder;
 
     public static List<User> inMemoryUserList = new ArrayList<>();
 
@@ -50,7 +49,7 @@ public class InMemoryUserDetailsService implements UserDetailsService {
             nextId = nextId++;
             User newUserDetails = new User(nextId,
                     userDto.getUsername(),
-                    passwordEncoder.passwordEncoder().encode(userDto.getPassword()),
+                    passwordEncoder.encode(userDto.getPassword()),
                     "ROLE_USER_1");
             inMemoryUserList.add(newUserDetails);
             createdUser = Optional.of(newUserDetails);
