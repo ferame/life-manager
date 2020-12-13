@@ -7,7 +7,9 @@ import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -25,8 +27,9 @@ public class TokenUtil implements Serializable {
   private static final long serialVersionUID = -3301605591108950415L;
   private final Clock clock = DefaultClock.INSTANCE;
 
+  @Lazy
+  @Autowired
   private DisabledTokenService disabledTokenService;
-
 
   @Value("${jwt.signing.key.secret}")
   private String secret;
