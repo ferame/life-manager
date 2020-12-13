@@ -1,50 +1,58 @@
 package backend.app.lifemanager.security.disabled.token.config;
 
-import backend.app.lifemanager.security.disabled.token.model.DisabledToken;
-import org.springframework.beans.factory.annotation.Autowired;
+import backend.app.lifemanager.security.disabled.token.queue.MessagePublisher;
+import backend.app.lifemanager.security.disabled.token.queue.RedisMessagePublisher;
+import backend.app.lifemanager.security.disabled.token.queue.RedisMessageSubscriber;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.ReactiveKeyCommands;
-import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
-import org.springframework.data.redis.connection.ReactiveStringCommands;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import javax.annotation.PreDestroy;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
 
 @Configuration
+@ComponentScan("backend.app.lifemanager.security.disabled.token")
+@EnableRedisRepositories(basePackages = "backend.app.lifemanager.security.disabled.token.repo")
+@PropertySource("classpath:application.properties")
 public class RedisConfig {
-
-    @Autowired
-    RedisConnectionFactory factory;
-
     @Bean
-    public ReactiveRedisTemplate<String, DisabledToken> reactiveRedisTemplate(ReactiveRedisConnectionFactory factory) {
-        Jackson2JsonRedisSerializer<DisabledToken> serializer = new Jackson2JsonRedisSerializer<>(DisabledToken.class);
-        RedisSerializationContext.RedisSerializationContextBuilder<String, DisabledToken> builder = RedisSerializationContext.newSerializationContext(new StringRedisSerializer());
-        RedisSerializationContext<String, DisabledToken> context = builder.value(serializer)
-                .build();
-        return new ReactiveRedisTemplate<>(factory, context);
+    JedisConnectionFactory jedisConnectionFactory() {
+        return new JedisConnectionFactory();
     }
 
     @Bean
-    public ReactiveKeyCommands keyCommands(final ReactiveRedisConnectionFactory reactiveRedisConnectionFactory) {
-        return reactiveRedisConnectionFactory.getReactiveConnection()
-                .keyCommands();
+    public RedisTemplate<String, Object> redisTemplate() {
+        final RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(jedisConnectionFactory());
+        template.setValueSerializer(new GenericToStringSerializer<>(Object.class));
+        return template;
     }
 
     @Bean
-    public ReactiveStringCommands stringCommands(final ReactiveRedisConnectionFactory reactiveRedisConnectionFactory) {
-        return reactiveRedisConnectionFactory.getReactiveConnection()
-                .stringCommands();
+    MessageListenerAdapter messageListener() {
+        return new MessageListenerAdapter(new RedisMessageSubscriber());
     }
 
-    @PreDestroy
-    public void cleanRedis() {
-        factory.getConnection()
-                .flushDb();
+    @Bean
+    RedisMessageListenerContainer redisContainer() {
+        final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(jedisConnectionFactory());
+        container.addMessageListener(messageListener(), topic());
+        return container;
+    }
+
+    @Bean
+    MessagePublisher redisPublisher() {
+        return new RedisMessagePublisher(redisTemplate(), topic());
+    }
+
+    @Bean
+    ChannelTopic topic() {
+        return new ChannelTopic("pubsub:queue");
     }
 }

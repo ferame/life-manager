@@ -3,7 +3,6 @@ package backend.app.lifemanager.security.controllers;
 import backend.app.lifemanager.basic.BasicResponse;
 import backend.app.lifemanager.security.authentication.AuthenticationException;
 import backend.app.lifemanager.security.disabled.token.DisabledTokenService;
-import backend.app.lifemanager.security.disabled.token.service.RedisService;
 import backend.app.lifemanager.security.token.TokenRequest;
 import backend.app.lifemanager.security.token.TokenResponse;
 import backend.app.lifemanager.security.token.TokenUtil;
@@ -40,19 +39,19 @@ public class AuthenticationController {
     private final TokenUtil tokenUtil;
     private final UserDetailsService jwtInMemoryUserDetailsService;
     private final InMemoryUserDetailsService inMemoryUserDetailsService;
-    private final RedisService redisService;
+    private final DisabledTokenService disabledTokenService;
 
     @Autowired
     public AuthenticationController(AuthenticationManager authenticationManager,
                                     TokenUtil tokenUtil,
                                     UserDetailsService jwtInMemoryUserDetailsService,
                                     InMemoryUserDetailsService inMemoryUserDetailsService,
-                                    RedisService redisService) {
+                                    DisabledTokenService disabledTokenService) {
         this.authenticationManager = authenticationManager;
         this.tokenUtil = tokenUtil;
         this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
         this.inMemoryUserDetailsService = inMemoryUserDetailsService;
-        this.redisService = redisService;
+        this.disabledTokenService = disabledTokenService;
     }
 
     @PostMapping(value = "${api.user.token.create}")
@@ -76,7 +75,7 @@ public class AuthenticationController {
         String username = tokenUtil.getUsernameFromToken(token);
         User user = (User) jwtInMemoryUserDetailsService.loadUserByUsername(username);
 
-        if (tokenUtil.canTokenBeRefreshed(token) && !redisService.isTokenDisabled(token)) {
+        if (tokenUtil.canTokenBeRefreshed(token) && !disabledTokenService.isTokenDisabled(token)) {
             String refreshedToken = tokenUtil.refreshToken(token);
             return ResponseEntity.ok(new TokenResponse(refreshedToken));
         } else {
@@ -94,7 +93,7 @@ public class AuthenticationController {
         }
 
         BasicResponse response;
-        if (newUserDetails.isPresent()){
+        if (newUserDetails.isPresent()) {
 //            TODO: remove the id from here, as that is not really meant for api user to be seen
             response = new BasicResponse(newUserDetails.get().getId(), newUserDetails.get().getUsername());
         } else {
