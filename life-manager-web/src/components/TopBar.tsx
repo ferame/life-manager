@@ -31,6 +31,9 @@ export default function TopBar() {
             <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                 <MenuIcon />
             </IconButton>
+            <Button color="inherit" href='/'>Home</Button>
+            <Button color="inherit" href='/contact'>Contact</Button>
+            <Button color="inherit" href='/about'>About</Button>
             <Typography variant="h6" className={classes.title}>
                 News
             </Typography>
