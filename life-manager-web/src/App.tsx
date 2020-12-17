@@ -2,12 +2,14 @@ import React from 'react';
 // import logo from './logo.svg';
 // import { Counter } from './features/counter/Counter';
 import './App.css';
-import { TopMenuBar } from './components/TopMenuBar';
+// import { TopMenuBar } from './components/TopMenuBar';
+import TopBar from './components/TopBar';
 
 function App() {
   return (
     <div className="App">
-      <TopMenuBar/>
+      <TopBar/>
+      {/* <TopMenuBar/> */}
       {/* <header className="App-header"> */}
         
         {/* <img src={logo} className="App-logo" alt="logo" />
