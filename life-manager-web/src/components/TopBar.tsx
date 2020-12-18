@@ -38,6 +38,7 @@ export default function TopBar() {
                 News
             </Typography>
             <Button color="inherit">Login</Button>
+            <Button color="inherit" href='/register'>Register</Button>
             </Toolbar>
         </AppBar>
         </div>
