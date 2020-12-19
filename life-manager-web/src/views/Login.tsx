@@ -1,6 +1,13 @@
 import React from 'react';
 
-export default function Login (props) {
+interface LoginProps {
+    handleSubmit: (event: any) => void,
+    handleChange: (event: any) => void,
+    username: string,
+    password: string
+}
+
+export default function Login (props: LoginProps) {
     return (
         <div className="form-wrapper">
             <form onSubmit={props.handleSubmit}>
