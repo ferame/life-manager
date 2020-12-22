@@ -1,17 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
 import axios from "axios";
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { setUser } from '../redux/reducers/userSlice';
 
 export default function Register () {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
-
-    const user = useSelector((state: RootState) => state.user);
-    const dispatch = useDispatch();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
 
     function handleSubmit (e:any) {
         e.preventDefault();
@@ -24,10 +18,6 @@ export default function Register () {
         .then((response) => {
             console.log("Response received");
             console.log(response);
-            dispatch(setUser({
-                username: username,
-                token: response.data.token
-            }));
         })
         .catch((error) => {
             console.log("Error while performing the api call: '/register'");
@@ -36,6 +26,7 @@ export default function Register () {
         console.log(username);
         console.log(password);
     }
+
     return (
         <div className="form-wrapper">
             <form onSubmit={handleSubmit}>
