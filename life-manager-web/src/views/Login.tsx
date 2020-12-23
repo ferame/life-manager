@@ -1,16 +1,14 @@
 import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-// import { RootState } from '../redux/store';
-import { setUser } from '../redux/reducers/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser, setUser } from '../redux/reducers/userSlice';
 
 export default function Login () {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
-    // const user = useSelector((state: RootState) => state.user);
     const dispatch = useDispatch();
+    const user = useSelector(selectUser);
     
     function handleSubmit (e:any) {
         e.preventDefault();
@@ -25,11 +23,12 @@ export default function Login () {
                 username: username,
                 token: response.data.token
             }));
+            console.log(user);
         })
         .catch((error) => {
-            console.log("Error while performing the api call: '/register'");
+            console.log("Error while performing the api call: '/authenticate'");
             console.log(error);
-        })
+        });
         console.log(username);
         console.log(password);
     }
