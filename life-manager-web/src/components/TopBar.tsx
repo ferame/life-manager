@@ -3,10 +3,10 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-// import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function TopBar() {
     const classes = useStyles();
+    let history = useHistory();
     return (
         <div className={classes.root}>
         <AppBar position="static">
@@ -31,19 +32,14 @@ export default function TopBar() {
             <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                 <MenuIcon />
             </IconButton>
-            <Link to='/'>Home</Link>
-            <Link to='/contact'>Contact</Link>
-            <Link to='/about'>About</Link>
-            {/* <Button color="inherit" onClick={() => router.push('/')}>Home</Button>
-            <Button color="inherit" onClick={() => router.push('/contact')}>Contact</Button>
-            <Button color="inherit" onClick={() => router.push('/about')}>About</Button> */}
+            <Button color="inherit" onClick={() => history.push('/')}>Home</Button>
+            <Button color="inherit" onClick={() => history.push('/contact')}>Contact</Button>
+            <Button color="inherit" onClick={() => history.push('/about')}>About</Button>
             <Typography variant="h6" className={classes.title}>
                 News
             </Typography>
-            <Link to='/login'>Login</Link>
-            <Link to='/register'>Register</Link>
-            {/* <Button color="inherit" onClick={() => router.push('/login')}>Login</Button> */}
-            {/* <Button color="inherit" onClick={() => router.push('/register')}>Register</Button> */}
+            <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>
+            <Button color="inherit" onClick={() => history.push('/register')}>Register</Button>
             </Toolbar>
         </AppBar>
         </div>
