@@ -1,13 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/reducers/userSlice';
 import axios from 'axios';
 import { List, ListItem, ListItemText } from '@material-ui/core';
-
-interface User {
-    username: string;
-    token: string;
-}
 
 interface Course {
     id: number;
@@ -15,26 +10,24 @@ interface Course {
     description: string;
 }
 
-function getCourses(user: User) {
-    // profileAxios.interceptors.request.use(config => {
-    //     const token = user.token;
-    //     config.headers.Authorization = `Bearer ${token}`;
-    //     return config;
-    // })
-    return axios.get('instructors/' + user.username + '/courses/assigned', {
-        headers: {
-            'Authorization': `Bearer ${user.token}`
-        }
-    })
-    .then(response => response.data)
-    .catch(err => console.log(`Authentication error ${err}`));
-}
-
 export default function Home () {
     const user = useSelector(selectUser);
-    console.log(user);
     const [courses, setCourses] = useState([]);
-    getCourses(user);
+
+    useEffect(() => {
+      const fetchCourses = async () => {
+        const result = await axios.get('instructors/' + user.username + '/courses/assigned', {
+            headers: {
+                'Authorization': `Bearer ${user.token}`
+            }
+        });
+        setCourses(result.data);
+      };
+   
+      fetchCourses();
+    }, [user]);
+
+    console.log(user);
     console.log(`Returned courses ${courses}`);
     return (
         <div>
