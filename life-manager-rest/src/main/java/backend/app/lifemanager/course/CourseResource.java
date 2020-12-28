@@ -20,6 +20,11 @@ public class CourseResource {
 		return courseManagementService.findAll();
 	}
 
+	@GetMapping("/instructors/{username}/courses/assigned")
+	public List<Course> getAllUserCourses(@PathVariable String username) {
+		return courseManagementService.findAllUserCourses();
+	}
+
 	@GetMapping("/instructors/{username}/courses/{id}")
 	public Course getCourse(@PathVariable String username, @PathVariable long id) {
 		return courseManagementService.findById(id);
