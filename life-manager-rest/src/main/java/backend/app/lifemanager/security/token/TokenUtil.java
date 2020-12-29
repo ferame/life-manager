@@ -1,12 +1,15 @@
 package backend.app.lifemanager.security.token;
 
+import backend.app.lifemanager.security.disabled.token.DisabledTokenService;
 import backend.app.lifemanager.security.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +27,9 @@ public class TokenUtil implements Serializable {
   private static final long serialVersionUID = -3301605591108950415L;
   private final Clock clock = DefaultClock.INSTANCE;
 
-  private TokenBlacklistService tokenBlacklistService;
-
+  @Lazy
+  @Autowired
+  private DisabledTokenService disabledTokenService;
 
   @Value("${jwt.signing.key.secret}")
   private String secret;
@@ -101,7 +105,7 @@ public class TokenUtil implements Serializable {
     final String username = getUsernameFromToken(token);
     boolean isUsernameCorrect = username.equals(user.getUsername());
     boolean isTokenExpired = isTokenExpired(token);
-    boolean isTokenBlacklisted = tokenBlacklistService.isTokenBlacklisted(token);
+    boolean isTokenBlacklisted = disabledTokenService.isTokenDisabled(token);
     return (isUsernameCorrect && !isTokenExpired && !isTokenBlacklisted);
   }
 
