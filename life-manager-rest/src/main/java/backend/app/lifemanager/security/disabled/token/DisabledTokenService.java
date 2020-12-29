@@ -32,6 +32,7 @@ public class DisabledTokenService {
         return disablingStatus;
     }
 
+//    TODO: flip the tokenRepoToBeValidTokenRepo?
 //    private void removeExpiredDisabledTokens() {
 //        disabledTokenRepository.findAll().forEach(disabledToken -> {
 //            if (tokenUtil.isTokenExpired(disabledToken.getId())) {
