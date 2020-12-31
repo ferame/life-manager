@@ -1,13 +1,13 @@
 package backend.app.lifemanager.features.weather;
 
 import backend.app.lifemanager.external.calls.WebClientConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Service
 public class WeatherService {
     private WebClientConfig webClientConfig;
@@ -26,11 +26,12 @@ public class WeatherService {
     public CurrentWeather getCurrent(String city) {
         Mono<CurrentWeather> currentWeatherMono = webClientConfig.client.get()
                 .uri(uriBuilder -> uriBuilder
-                .path(weatherPath)
-                .queryParam("q", city)
-                .queryParam("appid", apiKey)
-                .build()
-        ).retrieve().bodyToMono(CurrentWeather.class);
+                        .path(weatherPath)
+                        .queryParam("q", city)
+                        .queryParam("appid", apiKey)
+                        .build()
+                )
+                .retrieve().bodyToMono(CurrentWeather.class);
         CurrentWeather currentWeather = currentWeatherMono.block();
         return currentWeather;
     }
