@@ -1,6 +1,7 @@
 package backend.app.lifemanager.features.weather;
 
 import backend.app.lifemanager.external.calls.WebClientConfig;
+import backend.app.lifemanager.features.dao.WeatherForecast;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,16 +24,16 @@ public class WeatherService {
         this.webClientConfig = webClientConfig;
     }
 
-    public CurrentWeather getCurrent(String city) {
-        Mono<CurrentWeather> currentWeatherMono = webClientConfig.client.get()
+    public WeatherForecast getCurrent(String city) {
+        Mono<WeatherForecast> currentWeatherForecastMono = webClientConfig.client.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(weatherPath)
                         .queryParam("q", city)
                         .queryParam("appid", apiKey)
                         .build()
                 )
-                .retrieve().bodyToMono(CurrentWeather.class);
-        CurrentWeather currentWeather = currentWeatherMono.block();
-        return currentWeather;
+                .retrieve().bodyToMono(WeatherForecast.class);
+        WeatherForecast currentWeatherForecast = currentWeatherForecastMono.block();
+        return currentWeatherForecast;
     }
 }

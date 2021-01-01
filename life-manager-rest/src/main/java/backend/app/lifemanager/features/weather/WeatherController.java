@@ -1,10 +1,13 @@
 package backend.app.lifemanager.features.weather;
 
-import backend.app.lifemanager.basic.BasicResponse;
+import backend.app.lifemanager.features.dao.WeatherForecast;
 import backend.app.lifemanager.security.authentication.IAuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/weather")
@@ -19,7 +22,7 @@ public class WeatherController {
     }
 
     @GetMapping("/current/{location}")
-    public CurrentWeather currentWeather(@PathVariable String location) {
+    public WeatherForecast currentWeather(@PathVariable String location) {
         Authentication authentication = authenticationFacade.getAuthentication();
         String currentPrincipalName = authentication.getName();
         return weatherService.getCurrent(location);
