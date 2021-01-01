@@ -101,6 +101,10 @@
 			<artifactId>reactor-spring</artifactId>
 			<version>1.0.1.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-reactive-httpclient</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
