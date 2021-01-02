@@ -16,16 +16,17 @@ export default function Login () {
             username: username,
             password: password
         })
-        .then((response) => {
+        .then(response => {
             console.log("Response received");
             console.log(response);
             dispatch(setUser({
                 username: username,
                 token: response.data.token
             }));
+            // TODO: remove this log
             console.log(user);
         })
-        .catch((error) => {
+        .catch(error => {
             console.log("Error while performing the api call: '/authenticate'");
             console.log(error);
         });

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../redux/reducers/userSlice';
 import axios from 'axios';
 import { List, ListItem, ListItemText } from '@material-ui/core';
+import WeatherForecast from '../components/WeatherForecast';
 
 interface Course {
     id: number;
@@ -44,6 +45,8 @@ export default function Home () {
                     })}
                 </List>
             </div>
+            <h2>Weather Forecast Component</h2>
+            <WeatherForecast/>
         </div>
     )
 }
