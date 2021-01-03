@@ -17,16 +17,11 @@ export default function WeatherForecast() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const fetchCourses = async () => {
-            const result = await Axios.get('api/weather/current/' + location, {
-                headers: {
-                    'Authorization': `Bearer ${user.token}`
-                }
-            });
-            setTemperature(result.data.main.temp);
-          };
-       
-          fetchCourses();
+        Axios.get('api/weather/current/' + location, {
+            headers: {
+                'Authorization': `Bearer ${user.token}`
+            }
+        }).then(result => setTemperature(result.data.main.temp));     
     }, [location])
 
     return (
