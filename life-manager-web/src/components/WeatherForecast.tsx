@@ -16,6 +16,7 @@ export default function WeatherForecast() {
     const [temperature, setTemperature] = useState("");
     const dispatch = useDispatch();
 
+    // TODO data fetching should be done as part of the redux action
     useEffect(() => {
         Axios.get('api/weather/current/' + location, {
             headers: {
