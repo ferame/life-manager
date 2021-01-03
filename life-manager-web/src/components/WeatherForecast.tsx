@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from '../redux/reducers/userSlice';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -14,7 +14,7 @@ export default function WeatherForecast() {
     const user = useSelector(selectUser);
     const [location, setLocation] = useState("");
     const [temperature, setTemperature] = useState("");
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -23,7 +23,7 @@ export default function WeatherForecast() {
                     'Authorization': `Bearer ${user.token}`
                 }
             });
-            setTemperature(result.data.weather[0].description);
+            setTemperature(result.data.main.temp);
           };
        
           fetchCourses();
