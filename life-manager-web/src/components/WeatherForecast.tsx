@@ -10,6 +10,8 @@ const locations = [
     'vilnius'
 ];
 
+
+
 export default function WeatherForecast() {
     const user = useSelector(selectUser);
     const [location, setLocation] = useState("");
@@ -22,8 +24,8 @@ export default function WeatherForecast() {
             headers: {
                 'Authorization': `Bearer ${user.token}`
             }
-        }).then(result => setTemperature(result.data.main.temp));     
-    }, [location])
+        }).then(response => setTemperature(response.data.main.temp));     
+    }, [user, location])
 
     return (
         <div>
