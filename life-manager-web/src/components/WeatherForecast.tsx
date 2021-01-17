@@ -10,8 +10,6 @@ const locations = [
     'vilnius'
 ];
 
-
-
 export default function WeatherForecast() {
     const user = useSelector(selectUser);
     const [location, setLocation] = useState("");
