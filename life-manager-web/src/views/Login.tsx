@@ -1,4 +1,4 @@
-import axios from 'axios';
+import Axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,7 +14,7 @@ export default function Login () {
     
     function handleSubmit (e:any) {
         e.preventDefault();
-        axios.post("/authenticate", {
+        Axios.post("/authenticate", {
             username: username,
             password: password
         })

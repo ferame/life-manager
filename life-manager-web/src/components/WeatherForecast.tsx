@@ -22,7 +22,11 @@ export default function WeatherForecast() {
             headers: {
                 'Authorization': `Bearer ${user.token}`
             }
-        }).then(response => setTemperature(response.data.main.temp));     
+        }).then(response => {
+            setTemperature(response.data.main.temp);
+            dispatch(setTemperature(response.data.main.temp));
+            dispatch(setLocation(location));
+        });     
     }, [user, location])
 
     return (
