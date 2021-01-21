@@ -1,32 +1,45 @@
-import axios from 'axios';
+import Axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { selectUser, setUser } from '../redux/reducers/userSlice';
 
 export default function Login () {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const dispatch = useDispatch();
+    let history = useHistory();
     const user = useSelector(selectUser);
     
     function handleSubmit (e:any) {
         e.preventDefault();
-        axios.post("/authenticate", {
+        Axios.post("/authenticate", {
             username: username,
             password: password
         })
-        .then((response) => {
+        .then(response => {
             console.log("Response received");
             console.log(response);
-            dispatch(setUser({
-                username: username,
-                token: response.data.token
-            }));
+            if(response.data && response.data.token) {
+                dispatch(setUser({
+                    username: username,
+                    token: response.data.token
+                }));
+                history.push('/');
+            }
+            // TODO: remove this log
             console.log(user);
         })
-        .catch((error) => {
-            console.log("Error while performing the api call: '/authenticate'");
+        .catch(function (error) {
+            if (error.response) {
+                console.log("Authentication not successful");
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else {
+                console.log("Error while performing the api call: '/authenticate'");
+            }
             console.log(error);
         });
         console.log(username);

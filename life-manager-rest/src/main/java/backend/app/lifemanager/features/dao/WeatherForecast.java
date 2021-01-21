@@ -15,4 +15,6 @@ public class WeatherForecast {
     private String id;
     private String name;
     private String cod;
+    private Main main;
+    private String dt;
 }

@@ -11,5 +11,4 @@ public class CurrentWeather {
     private String id;
     private String name;
     private String cod;
-
 }

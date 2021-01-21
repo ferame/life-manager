@@ -23,6 +23,9 @@ public class WeatherService {
     @Value("${openweather.api.weather.path}")
     private String weatherPath;
 
+    @Value("${openweather.api.units}")
+    private String units;
+
     @Autowired
     public WeatherService(WebClient webClient) {
         this.webClient = webClient;
@@ -36,6 +39,7 @@ public class WeatherService {
                         .path(weatherPath)
                         .queryParam("q", city)
                         .queryParam("appid", apiKey)
+                        .queryParam("units", units)
                         .build()
                 )
                 .retrieve().bodyToMono(WeatherForecast.class);
