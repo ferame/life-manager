@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from '../redux/reducers/userSlice';
-import { setLocation, setTemperature } from '../redux/reducers/weatherSlice';
+import { setLocation, setTemperature, selectWeather } from '../redux/reducers/weatherSlice';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Axios from 'axios';
@@ -13,22 +13,23 @@ const locations = [
 
 export default function WeatherForecast() {
     const user = useSelector(selectUser);
-    const [location, setLoc] = useState("");
-    const [temperature, setTemp] = useState("");
+    const weather = useSelector(selectWeather);
+    const [loc, setLoc] = useState<string>(weather.location);
+    const [temperature, setTemp] = useState<number>(weather.temperature);
     const dispatch = useDispatch();
 
     // TODO data fetching should be done as part of the redux action
     useEffect(() => {
-        Axios.get('api/weather/current/' + location, {
+        Axios.get('api/weather/current/' + loc, {
             headers: {
                 'Authorization': `Bearer ${user.token}`
             }
         }).then(response => {
             setTemp(response.data.main.temp);
             dispatch(setTemperature(response.data.main.temp));
-            dispatch(setLocation(location));
+            dispatch(setLocation(loc));
         });     
-    }, [user, location, dispatch])
+    }, [user, loc, dispatch])
 
     return (
         <div>
@@ -36,7 +37,7 @@ export default function WeatherForecast() {
             <div>Temperature: {temperature}</div>
             <Autocomplete
                 id="location-selector"
-                value={location}
+                value={loc}
                 onChange={(event: any, newLocation: string | null) => {
                     setLoc(newLocation === null ? "" : newLocation);
                 }}
