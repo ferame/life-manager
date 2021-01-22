@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from '../redux/reducers/userSlice';
-import { setLocation, setTemperature, selectWeather } from '../redux/reducers/weatherSlice';
+import { selectUser } from '../../redux/reducers/userSlice';
+import { setLocation, setTemperature, selectWeather } from '../../redux/reducers/weatherSlice';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Axios from 'axios';
+import '../weather_forecast/WeatherForecast.style.scss';
 
 const locations = [
     'london',
@@ -32,7 +33,7 @@ export default function WeatherForecast() {
     }, [user, loc, dispatch])
 
     return (
-        <div>
+        <div className="weather-component widget">
             <div><b>Weather Forecast</b></div>
             <div>Temperature: {temperature}</div>
             <Autocomplete

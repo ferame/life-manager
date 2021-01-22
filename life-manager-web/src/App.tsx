@@ -3,9 +3,9 @@ import {
   Switch,
   Route
 } from 'react-router-dom';
-import './App.css';
+import './App.style.scss';
 import TopBar from './components/TopBar';
-import Home from './views/Home';
+import Home from './views/home/Home';
 import Contact from './views/Contact';
 import About from './views/About';
 import Register from './views/Register';
