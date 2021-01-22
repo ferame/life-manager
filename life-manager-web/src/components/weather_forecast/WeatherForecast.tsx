@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Axios from 'axios';
 import '../weather_forecast/WeatherForecast.style.scss';
+import '../weather_forecast/WeatherIcons.style.scss';
 
 const locations = [
     'london',
@@ -34,17 +35,30 @@ export default function WeatherForecast() {
 
     return (
         <div className="weather-component widget">
-            <div><b>Weather Forecast</b></div>
-            <div>Temperature: {temperature}</div>
+            <div className="weather-card">
+                <div className="current-temp">
+                    <span className="temp">{temperature}&deg;</span>
+                    <span className="location">{weather.location}</span>
+                </div>
+                <div className="current-weather">
+                    <div className="conditions weatherIcon">
+                        <div className="sunny">
+                            <div className="inner"/>
+                        </div>
+                    </div>
+                    <div className="info">
+                        <span className="rain-mm">1.3 MM</span>
+                        <span className="wind-speed">10 M/s</span>
+                    </div>
+                </div>
+            </div>
             <Autocomplete
-                id="location-selector"
                 value={loc}
                 onChange={(event: any, newLocation: string | null) => {
                     setLoc(newLocation === null ? "" : newLocation);
                 }}
                 options={locations}
                 getOptionLabel={(option) => option.toUpperCase()}
-                style={{ width: 300 }}
                 renderInput={(params) => <TextField {...params} label="location selector" variant="outlined" />}
             />
         </div>

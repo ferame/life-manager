@@ -6,10 +6,10 @@ export default function Home () {
     return (
         <div className="widgets-grid">
             <WeatherForecast/>
+            {/* <WeatherForecast/>
             <WeatherForecast/>
             <WeatherForecast/>
-            <WeatherForecast/>
-            <WeatherForecast/>
+            <WeatherForecast/> */}
         </div>
     )
 }
