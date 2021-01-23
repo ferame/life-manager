@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from '../../redux/reducers/userSlice';
-import { setLocation, setTemperature, selectWeather } from '../../redux/reducers/weatherSlice';
+import { updateForecast, selectWeather } from '../../redux/reducers/weatherSlice';
+import {selectUser} from '../../redux/reducers/userSlice';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Axios from 'axios';
 import '../weather_forecast/WeatherForecast.style.scss';
 import '../weather_forecast/WeatherIcons.style.scss';
 
@@ -17,27 +16,16 @@ export default function WeatherForecast() {
     const user = useSelector(selectUser);
     const weather = useSelector(selectWeather);
     const [loc, setLoc] = useState<string>(weather.location);
-    const [temperature, setTemp] = useState<number>(weather.temperature);
     const dispatch = useDispatch();
 
-    // TODO data fetching should be done as part of the redux action
     useEffect(() => {
-        Axios.get('api/weather/current/' + loc, {
-            headers: {
-                'Authorization': `Bearer ${user.token}`
-            }
-        }).then(response => {
-            setTemp(response.data.main.temp);
-            dispatch(setTemperature(response.data.main.temp));
-            dispatch(setLocation(loc));
-        });     
-    }, [user, loc, dispatch])
-
+        dispatch(updateForecast({location: loc, userToken: user.token}));     
+    }, [loc, user, dispatch])
     return (
         <div className="weather-component widget">
             <div className="weather-card">
                 <div className="current-temp">
-                    <span className="temp">{temperature}&deg;</span>
+                    <span className="temp">{weather.temperature}&deg;</span>
                     <span className="location">{weather.location}</span>
                 </div>
                 <div className="current-weather">

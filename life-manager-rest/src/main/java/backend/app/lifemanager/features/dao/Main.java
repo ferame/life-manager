@@ -13,4 +13,5 @@ public class Main {
     private double humidity;
     private double temp_min;
     private double temp_max;
+    private double feels_like;
 }

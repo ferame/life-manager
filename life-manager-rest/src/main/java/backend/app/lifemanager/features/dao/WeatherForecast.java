@@ -11,10 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 public class WeatherForecast {
     private List<Weather> weather;
-    private Wind wind;
     private String id;
     private String name;
-    private String cod;
     private Main main;
     private String dt;
+    private Wind wind;
+    private String cod;
 }
