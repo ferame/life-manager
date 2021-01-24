@@ -4,6 +4,7 @@ import backend.app.lifemanager.features.dao.WeatherForecast;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -32,7 +33,9 @@ public class WeatherService {
     }
 
     public WeatherForecast getCurrent(String city) {
+//    public String getCurrent(String city) {
         Mono<WeatherForecast> currentWeatherForecastMono = webClient.get()
+//        Mono<String> currentWeatherForecastMono = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("http")
                         .host(weatherAuthority)
@@ -42,8 +45,13 @@ public class WeatherService {
                         .queryParam("units", units)
                         .build()
                 )
+//                .accept(MediaType.APPLICATION_JSON)
+//                .retrieve()
+//                .bodyToMono(String.class);
+                .accept(MediaType.APPLICATION_JSON)
                 .retrieve().bodyToMono(WeatherForecast.class);
 //        TODO: add handling of the failing calls.
         return currentWeatherForecastMono.block();
+//        return currentWeatherForecastMono.block();
     }
 }

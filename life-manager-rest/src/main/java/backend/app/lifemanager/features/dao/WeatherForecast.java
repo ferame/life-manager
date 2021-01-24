@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WeatherForecast {
+    private Coordinates coord;
     private List<Weather> weather;
     private String id;
     private String name;
@@ -17,4 +18,5 @@ public class WeatherForecast {
     private String dt;
     private Wind wind;
     private String cod;
+    private Rain rain;
 }

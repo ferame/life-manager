@@ -32,7 +32,7 @@ public class WeatherController {
     public String publicEndpoint() {
         Authentication authentication = authenticationFacade.getAuthentication();
         String currentPrincipalName = authentication.getName();
-//        List<String> authoritypirkaList = authentication
+//        List<String> authorityList = authentication
 //                .getAuthorities()
 //                .parallelStream()
 //                .map(authority -> authority.getAuthority())
