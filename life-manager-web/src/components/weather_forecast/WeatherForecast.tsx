@@ -9,7 +9,8 @@ import '../weather_forecast/WeatherIcons.style.scss';
 
 const locations = [
     'london',
-    'vilnius'
+    'vilnius',
+    'kaunas'
 ];
 
 export default function WeatherForecast() {
@@ -19,7 +20,9 @@ export default function WeatherForecast() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(updateForecast({location: loc, userToken: user.token}));     
+        if(loc !== undefined){
+            dispatch(updateForecast(user.token, loc));   
+        }  
     }, [loc, user, dispatch])
     return (
         <div className="weather-component widget">
@@ -35,8 +38,8 @@ export default function WeatherForecast() {
                         </div>
                     </div>
                     <div className="info">
-                        <span className="rain-mm">1.3 MM</span>
-                        <span className="wind-speed">10 M/s</span>
+                        <span className="rain-mm">{weather.rainfall} MM</span>
+                        <span className="wind-speed">{weather.windspeed} M/s</span>
                     </div>
                 </div>
             </div>
