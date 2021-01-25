@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Rain {
     @JsonProperty("1h")
-    private double hour;
+    private double oneHour;
     @JsonProperty("3h")
     private double threeHours;
 }

@@ -1,5 +1,6 @@
 package backend.app.lifemanager.features.dao;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +9,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Main {
-    private double temp;
+    @JsonProperty("temp")
+    private double temperature;
     private double pressure;
     private double humidity;
-    private double temp_min;
-    private double temp_max;
-    private double feels_like;
+    @JsonProperty("temp_min")
+    private double temperatureMin;
+    @JsonProperty("temp_max")
+    private double temperatureMax;
+    @JsonProperty("feels_like")
+    private double feelsLike;
 }
