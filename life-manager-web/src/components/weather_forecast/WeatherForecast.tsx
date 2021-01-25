@@ -13,17 +13,58 @@ const locations = [
     'kaunas'
 ];
 
+const conditions = [
+    {
+        forecast: 'clear sky',
+        icon: 'sunny'
+    },
+    {
+        forecast: 'few clouds',
+        icon: 'mostlysunny'
+    },
+    {
+        forecast: 'scattered clouds',
+        icon: 'mostlycloudy'
+    },
+    {
+        forecast: 'broken clouds',
+        icon: 'cloudy'
+    },
+    {
+        forecast: 'shower rain',
+        icon: 'rain'
+    },
+    {
+        forecast: 'rain',
+        icon: 'rain'
+    },
+    {
+        forecast: 'thunderstorm',
+        icon: 'tstorms'
+    },
+    {
+        forecast: 'snow',
+        icon: 'snow'
+    },
+    {
+        forecast: 'mist',
+        icon: 'fog'
+    }
+];
+
 export default function WeatherForecast() {
     const user = useSelector(selectUser);
     const weather = useSelector(selectWeather);
     const [loc, setLoc] = useState<string>(weather.location);
     const dispatch = useDispatch();
+    // const currentIcon = weather.description
 
     useEffect(() => {
         if(loc !== undefined){
             dispatch(updateForecast(user.token, loc));   
         }  
     }, [loc, user, dispatch])
+
     return (
         <div className="weather-component widget">
             <div className="weather-card">
