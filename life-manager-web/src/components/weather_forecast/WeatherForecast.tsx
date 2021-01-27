@@ -13,44 +13,21 @@ const locations = [
     'kaunas'
 ];
 
-const conditions = [
-    {
-        forecast: 'clear sky',
-        icon: 'sunny'
-    },
-    {
-        forecast: 'few clouds',
-        icon: 'mostlysunny'
-    },
-    {
-        forecast: 'scattered clouds',
-        icon: 'mostlycloudy'
-    },
-    {
-        forecast: 'broken clouds',
-        icon: 'cloudy'
-    },
-    {
-        forecast: 'shower rain',
-        icon: 'rain'
-    },
-    {
-        forecast: 'rain',
-        icon: 'rain'
-    },
-    {
-        forecast: 'thunderstorm',
-        icon: 'tstorms'
-    },
-    {
-        forecast: 'snow',
-        icon: 'snow'
-    },
-    {
-        forecast: 'mist',
-        icon: 'fog'
-    }
-];
+const conditions = new Map([
+    ['clear sky', 'sunny'],
+    ['few clouds', 'mostlysunny'],
+    ['scattered clouds', 'mostlycloudy'],
+    ['broken clouds', 'cloudy'],
+    ['shower rain', 'rain'],
+    ['rain', 'rain'],
+    ['thunderstorm', 'tstorms'],
+    ['snow', 'snow'],
+    ['mist', 'fog']
+]);
+
+const getWeatherIconName = (forecast: string) => {
+    return conditions.get(forecast.toLowerCase());
+}
 
 export default function WeatherForecast() {
     const user = useSelector(selectUser);
@@ -74,7 +51,7 @@ export default function WeatherForecast() {
                 </div>
                 <div className="current-weather">
                     <div className="conditions weatherIcon">
-                        <div className="sunny">
+                        <div className={getWeatherIconName(weather?.description ?? "sunny")}>
                             <div className="inner"/>
                         </div>
                     </div>
