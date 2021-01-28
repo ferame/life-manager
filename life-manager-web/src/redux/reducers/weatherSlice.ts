@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../store';
 import Axios from 'axios';
-import lodash from 'lodash';
 
 interface Weather {
   location: string;
@@ -9,6 +8,7 @@ interface Weather {
   windspeed: number;
   rainfall: number;
   description: string;
+  id: string;
 }
 
 const initialState: Weather = {
@@ -16,7 +16,8 @@ const initialState: Weather = {
   temperature: 0,
   windspeed: 0,
   rainfall: 0,
-  description: ''
+  description: '',
+  id: '0'
 };
 
 export const weatherSlice = createSlice({
@@ -35,6 +36,7 @@ export const weatherSlice = createSlice({
       state.windspeed = action.payload.windspeed;
       state.rainfall = action.payload.rainfall;
       state.description = action.payload.description;
+      state.id = action.payload.id;
     }
   },
 });
@@ -47,16 +49,18 @@ export const updateForecast = (userToken: string, location: string): AppThunk =>
         'Authorization': `Bearer ${userToken}`
       }
     }).then(response => {
-      let loc = lodash.get(response, "data.name");
-      let temp = lodash.get(response, "data.main.temp");
-      let desc = lodash.get(response, "data.weather[0].main");
-      if(loc !== undefined && temp !== undefined) {
+      let loc = response?.data?.name;
+      let temp = response?.data?.main.temp;
+      let desc = response?.data?.weather?.[0]?.main;
+      let weatherId = response?.data?.weather?.[0]?.id;
+      if(loc !== undefined && temp !== undefined && desc !== undefined && weatherId !== undefined) {
         dispatch(setForecast({
           location: loc,
-          temperature: temp,
-          windspeed: lodash.get(response, "data.wind.speed", 0),
-          rainfall: lodash.get(response, "data.rain.1h", 0),
-          description: desc
+          temperature: Math.round(temp * 10) / 10,
+          windspeed: response?.data?.wind?.speed ?? 0,
+          rainfall: response?.data?.rain?.['1h'] ?? 0,
+          description: desc,
+          id: weatherId
         }))
       }
     });

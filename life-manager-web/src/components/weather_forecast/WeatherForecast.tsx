@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import '../weather_forecast/WeatherForecast.style.scss';
 import '../weather_forecast/WeatherIcons.style.scss';
+import weatherConditions from '../weather_forecast/weatherConditions';
 
 const locations = [
     'london',
@@ -13,20 +14,8 @@ const locations = [
     'kaunas'
 ];
 
-const conditions = new Map([
-    ['clear sky', 'sunny'],
-    ['few clouds', 'mostlysunny'],
-    ['scattered clouds', 'mostlycloudy'],
-    ['broken clouds', 'cloudy'],
-    ['shower rain', 'rain'],
-    ['rain', 'rain'],
-    ['thunderstorm', 'tstorms'],
-    ['snow', 'snow'],
-    ['mist', 'fog']
-]);
-
-const getWeatherIconName = (forecast: string) => {
-    return conditions.get(forecast.toLowerCase());
+const getWeatherIconName = (forecastId: string) => {
+    return weatherConditions.find(entry => entry.id === parseInt(forecastId))?.icon ?? "sunny";
 }
 
 export default function WeatherForecast() {
@@ -34,7 +23,6 @@ export default function WeatherForecast() {
     const weather = useSelector(selectWeather);
     const [loc, setLoc] = useState<string>(weather.location);
     const dispatch = useDispatch();
-    // const currentIcon = weather.description
 
     useEffect(() => {
         if(loc !== undefined){
@@ -51,7 +39,7 @@ export default function WeatherForecast() {
                 </div>
                 <div className="current-weather">
                     <div className="conditions weatherIcon">
-                        <div className={getWeatherIconName(weather?.description ?? "sunny")}>
+                        <div className={getWeatherIconName(weather?.id)}>
                             <div className="inner"/>
                         </div>
                     </div>
