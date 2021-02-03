@@ -33,7 +33,7 @@ public class WeatherController {
 
     @GetMapping("/locations")
     public List<String> forecastLocations() {
-
+        weatherService.getForecastLocations();
         return new ArrayList<>();
     }
 

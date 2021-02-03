@@ -1,5 +1,6 @@
 package backend.app.lifemanager.features.weather;
 
+import backend.app.lifemanager.external.calls.FileDownloaderService;
 import backend.app.lifemanager.features.dao.WeatherForecast;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,9 @@ import java.util.List;
 @Slf4j
 @Service
 public class WeatherService {
-    @Autowired
+
     private final WebClient webClient;
+    private final FileDownloaderService fileDownloaderService;
 
     @Value("${openweather.api.key}")
     private String apiKey;
@@ -31,8 +33,9 @@ public class WeatherService {
     private String units;
 
     @Autowired
-    public WeatherService(WebClient webClient) {
+    public WeatherService(WebClient webClient, FileDownloaderService fileDownloaderService) {
         this.webClient = webClient;
+        this.fileDownloaderService = fileDownloaderService;
     }
 
     public WeatherForecast getCurrent(String city) {
@@ -62,6 +65,7 @@ public class WeatherService {
 //        TODO: get the list from "http://bulk.openweathermap.org/sample/current.city.list.json.gz"
 //        Store it in local cache
 //        Serve first x matches.
+        fileDownloaderService.downloadFileFromUrlUsingNio();
         return new ArrayList<>();
     }
 }
