@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +66,12 @@ public class WeatherService {
 //        TODO: get the list from "http://bulk.openweathermap.org/sample/current.city.list.json.gz"
 //        Store it in local cache
 //        Serve first x matches.
-        fileDownloaderService.downloadFileFromUrlUsingNio();
+        try {
+            fileDownloaderService.downloadFileFromUrlUsingNio();
+        } catch (IOException e) {
+            log.error("Failed to download file");
+            log.error(e.getMessage());
+        }
         return new ArrayList<>();
     }
 }
