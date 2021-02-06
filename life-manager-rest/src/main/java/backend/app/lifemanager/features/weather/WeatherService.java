@@ -1,7 +1,7 @@
 package backend.app.lifemanager.features.weather;
 
 import backend.app.lifemanager.external.calls.FileDownloaderService;
-import backend.app.lifemanager.features.dao.WeatherForecast;
+import backend.app.lifemanager.features.dao.weather.WeatherForecast;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,7 +67,7 @@ public class WeatherService {
 //        Store it in local cache
 //        Serve first x matches.
         try {
-            fileDownloaderService.downloadFileFromUrlUsingNio();
+            fileDownloaderService.downloadNewLocationList();
         } catch (IOException e) {
             log.error("Failed to download file");
             log.error(e.getMessage());

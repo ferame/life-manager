@@ -1,4 +1,4 @@
-package backend.app.lifemanager.features.dao;
+package backend.app.lifemanager.features.dao.weather;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

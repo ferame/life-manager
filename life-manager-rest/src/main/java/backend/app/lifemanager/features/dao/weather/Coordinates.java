@@ -1,4 +1,4 @@
-package backend.app.lifemanager.features.dao;
+package backend.app.lifemanager.features.dao.weather;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

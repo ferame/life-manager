@@ -1,6 +1,6 @@
 package backend.app.lifemanager.features.weather;
 
-import backend.app.lifemanager.features.dao.WeatherForecast;
+import backend.app.lifemanager.features.dao.weather.WeatherForecast;
 import backend.app.lifemanager.security.authentication.IAuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

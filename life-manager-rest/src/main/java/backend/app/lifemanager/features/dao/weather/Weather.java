@@ -1,4 +1,4 @@
-package backend.app.lifemanager.features.dao;
+package backend.app.lifemanager.features.dao.weather;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CurrentWeather {
+public class Weather {
     private String id;
-    private String name;
-    private String cod;
+    private String main;
+    private String description;
+    private String icon;
 }
