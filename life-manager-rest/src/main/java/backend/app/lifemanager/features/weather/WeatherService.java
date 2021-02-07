@@ -1,6 +1,7 @@
 package backend.app.lifemanager.features.weather;
 
 import backend.app.lifemanager.external.calls.FileDownloaderService;
+import backend.app.lifemanager.features.dao.locations.Location;
 import backend.app.lifemanager.features.dao.weather.WeatherForecast;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,16 +63,17 @@ public class WeatherService {
 //        return currentWeatherForecastMono.block();
     }
 
-    public List<String> getForecastLocations() {
+    public List<Location> getForecastLocations() {
 //        TODO: get the list from "http://bulk.openweathermap.org/sample/current.city.list.json.gz"
 //        Store it in local cache
 //        Serve first x matches.
+        List<Location> locations = new ArrayList<>();
         try {
-            fileDownloaderService.downloadNewLocationList();
+            locations.addAll(fileDownloaderService.downloadNewLocationList());
         } catch (IOException e) {
             log.error("Failed to download file");
             log.error(e.getMessage());
         }
-        return new ArrayList<>();
+        return locations;
     }
 }

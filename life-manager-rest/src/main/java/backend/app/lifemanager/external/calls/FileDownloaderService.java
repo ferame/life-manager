@@ -1,7 +1,7 @@
 package backend.app.lifemanager.external.calls;
 
 import backend.app.lifemanager.features.dao.locations.Location;
-import backend.app.lifemanager.features.dao.locations.Locations;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +17,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.zip.GZIPInputStream;
@@ -71,13 +72,14 @@ public class FileDownloaderService {
     }
 
     private List<Location> parseDownloadedJson(File jsonFile) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Locations locations = null;
+        ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        List<Location> locations = new ArrayList<>();
         try {
-            locations = objectMapper.readValue(jsonFile, Locations.class);
+            locations.addAll(Arrays.asList(objectMapper.readValue(jsonFile, Location[].class)));
+            log.info("Completed reading json file.");
         } catch (IOException exception) {
             log.error("Failed to parse json file. Exception: " + exception.getMessage());
         }
-        return locations == null ? new ArrayList<>() : locations.getLocations();
+        return locations;
     }
 }

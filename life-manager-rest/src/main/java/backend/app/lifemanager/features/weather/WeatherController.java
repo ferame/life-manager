@@ -1,5 +1,6 @@
 package backend.app.lifemanager.features.weather;
 
+import backend.app.lifemanager.features.dao.locations.Location;
 import backend.app.lifemanager.features.dao.weather.WeatherForecast;
 import backend.app.lifemanager.security.authentication.IAuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,8 @@ public class WeatherController {
     }
 
     @GetMapping("/locations")
-    public List<String> forecastLocations() {
-        weatherService.getForecastLocations();
-        return new ArrayList<>();
+    public List<Location> forecastLocations() {
+        return weatherService.getForecastLocations();
     }
 
     @GetMapping("/unrestricted")
