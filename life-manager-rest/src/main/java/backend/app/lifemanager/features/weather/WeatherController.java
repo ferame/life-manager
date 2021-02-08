@@ -1,7 +1,7 @@
 package backend.app.lifemanager.features.weather;
 
-import backend.app.lifemanager.features.dao.locations.Location;
-import backend.app.lifemanager.features.dao.weather.WeatherForecast;
+import backend.app.lifemanager.features.weather.dao.locations.Location;
+import backend.app.lifemanager.features.weather.dao.weather.WeatherForecast;
 import backend.app.lifemanager.security.authentication.IAuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

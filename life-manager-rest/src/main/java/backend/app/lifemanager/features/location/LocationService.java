@@ -1,21 +1,22 @@
-package backend.app.lifemanager.external.calls;
+package backend.app.lifemanager.features.location;
 
-import backend.app.lifemanager.features.dao.locations.Location;
+import backend.app.lifemanager.features.weather.dao.locations.Location;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.annotation.PostConstruct;
+import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.zip.GZIPInputStream;
 
 @Slf4j
 @Service
-public class FileDownloaderService {
+public class LocationService {
 
     @Value("${openweather.api.locations.download.url}")
     private String downloadUrl;
@@ -35,14 +36,49 @@ public class FileDownloaderService {
     @Value("${openweather.api.locations.decompressed.path}")
     private String decompressedPath;
 
-    public List<Location> downloadNewLocationList() throws IOException {
-        URL url = new URL(downloadUrl);
-        ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+    private List<Location> locationsList;
+    private Timestamp timestamp;
+
+    @PostConstruct
+    void initialLocationListLoad(){
+        try {
+            locationsList = updateLocationList();
+            timestamp = new Timestamp(System.currentTimeMillis());
+        } catch (IOException exception) {
+            log.error("Failed to download available locations. {}", exception.getMessage());
+            log.error(exception.getCause().toString());
+        }
+    }
+
+    public List<Location> getLocationsList() {
+        return locationsList == null ? updateLocationList() : locationsList;
+    }
+
+    public List<Location> updateLocationList() {
+        try {
+            URL url = null;
+            url = new URL(downloadUrl);
+            ReadableByteChannel rbc = null;
+            rbc = Channels.newChannel(url.openStream());
+        } catch (MalformedURLException exception) {
+            log.error("Incorrect location download url: {}. Exception: {}", downloadUrl, exception.getMessage());
+        } catch (IOException exception) {
+            log.error("The location download url does not respond. Url: {}. Exception: {}", downloadUrl, exception.getMessage());
+        }
+
         String filePath = new File(downloadPath).getAbsolutePath();
-        FileOutputStream fos = new FileOutputStream(filePath);
-        fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-        fos.close();
-        rbc.close();
+        try {
+            FileOutputStream fos = null;
+            fos = new FileOutputStream(filePath);
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            fos.close();
+            rbc.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+
         Path path = Paths.get(filePath);
 //        TODO: delete old json, if there is one.
         Optional<File> decompressedSuccessfully = decompressGzip(path);

@@ -1,6 +1,6 @@
-package backend.app.lifemanager.features.dao.locations;
+package backend.app.lifemanager.features.weather.dao.locations;
 
-import backend.app.lifemanager.features.dao.weather.Coordinates;
+import backend.app.lifemanager.features.weather.dao.weather.Coordinates;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;

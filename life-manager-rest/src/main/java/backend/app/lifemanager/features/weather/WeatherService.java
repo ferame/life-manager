@@ -1,8 +1,8 @@
 package backend.app.lifemanager.features.weather;
 
-import backend.app.lifemanager.external.calls.FileDownloaderService;
-import backend.app.lifemanager.features.dao.locations.Location;
-import backend.app.lifemanager.features.dao.weather.WeatherForecast;
+import backend.app.lifemanager.features.location.LocationService;
+import backend.app.lifemanager.features.weather.dao.locations.Location;
+import backend.app.lifemanager.features.weather.dao.weather.WeatherForecast;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ import java.util.List;
 public class WeatherService {
 
     private final WebClient webClient;
-    private final FileDownloaderService fileDownloaderService;
+    private final LocationService locationService;
 
     @Value("${openweather.api.key}")
     private String apiKey;
@@ -35,9 +35,9 @@ public class WeatherService {
     private String units;
 
     @Autowired
-    public WeatherService(WebClient webClient, FileDownloaderService fileDownloaderService) {
+    public WeatherService(WebClient webClient, LocationService locationService) {
         this.webClient = webClient;
-        this.fileDownloaderService = fileDownloaderService;
+        this.locationService = locationService;
     }
 
     public WeatherForecast getCurrent(String city) {
@@ -69,7 +69,7 @@ public class WeatherService {
 //        Serve first x matches.
         List<Location> locations = new ArrayList<>();
         try {
-            locations.addAll(fileDownloaderService.downloadNewLocationList());
+            locations.addAll(locationService.downloadNewLocationList());
         } catch (IOException e) {
             log.error("Failed to download file");
             log.error(e.getMessage());
