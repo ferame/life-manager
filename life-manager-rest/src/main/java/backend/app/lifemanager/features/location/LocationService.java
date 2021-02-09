@@ -55,41 +55,51 @@ public class LocationService {
     }
 
     public List<Location> updateLocationList() {
+        Optional<ReadableByteChannel> readableByteChannel = openDownloadStreamFromUrl();
+        String filePath = new File(downloadPath).getAbsolutePath();
+        List<Location> locations = new ArrayList<>();
+        if (readableByteChannel.isPresent() && downloadFileViaStream(readableByteChannel.get(), filePath)) {
+            //        TODO: delete old json, if there is one.
+            decompressGzip(filePath).ifPresentOrElse(
+                    file -> {
+                        locations.addAll(parseDownloadedJson(file));
+            //        TODO: delete the gz file if decompressing is successful
+                    },
+                    () -> log.warn("Failed to find a decompressed json file to parse"));
+        }
+        return locations;
+    }
+
+    private Optional<ReadableByteChannel> openDownloadStreamFromUrl() {
+        ReadableByteChannel readableByteChannel = null;
         try {
             URL url = null;
             url = new URL(downloadUrl);
-            ReadableByteChannel rbc = null;
-            rbc = Channels.newChannel(url.openStream());
+            readableByteChannel = Channels.newChannel(url.openStream());
         } catch (MalformedURLException exception) {
             log.error("Incorrect location download url: {}. Exception: {}", downloadUrl, exception.getMessage());
         } catch (IOException exception) {
             log.error("The location download url does not respond. Url: {}. Exception: {}", downloadUrl, exception.getMessage());
         }
-
-        String filePath = new File(downloadPath).getAbsolutePath();
-        try {
-            FileOutputStream fos = null;
-            fos = new FileOutputStream(filePath);
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            fos.close();
-            rbc.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-
-        Path path = Paths.get(filePath);
-//        TODO: delete old json, if there is one.
-        Optional<File> decompressedSuccessfully = decompressGzip(path);
-//        TODO: delete the gz file if decompressing is successful
-
-        List<Location> locations = new ArrayList<>();
-        decompressedSuccessfully.ifPresent(file -> locations.addAll(parseDownloadedJson(file)));
-        return locations;
+        return readableByteChannel != null  ? Optional.of(readableByteChannel) : Optional.empty();
     }
 
-    private Optional<File> decompressGzip(Path gzipPath) {
+    private boolean downloadFileViaStream(ReadableByteChannel readableByteChannel, String filePath) {
+        boolean hasFinished = false;
+        try {
+            FileOutputStream fos = new FileOutputStream(filePath);
+            fos.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+            fos.close();
+            readableByteChannel.close();
+            hasFinished = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return hasFinished;
+    }
+
+    private Optional<File> decompressGzip(String filePath) {
+        Path gzipPath = Paths.get(filePath);
         File decompressedFile = new File(decompressedPath);
         try (
                 GZIPInputStream gis = new GZIPInputStream(new FileInputStream(gzipPath.toFile()));
