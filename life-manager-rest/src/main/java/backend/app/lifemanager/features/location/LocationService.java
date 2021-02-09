@@ -41,17 +41,23 @@ public class LocationService {
 
     @PostConstruct
     void initialLocationListLoad(){
-        try {
-            locationsList = updateLocationList();
-            timestamp = new Timestamp(System.currentTimeMillis());
-        } catch (IOException exception) {
-            log.error("Failed to download available locations. {}", exception.getMessage());
-            log.error(exception.getCause().toString());
+        locationsList = updateLocationList();
+        timestamp = new Timestamp(System.currentTimeMillis());
+        if (locationsList.isEmpty()) {
+            log.error("Failed to download available locations. Please investigate the issue. Download Url: {}, Download Path: {}", downloadUrl, downloadPath);
         }
     }
 
     public List<Location> getLocationsList() {
-        return locationsList == null ? updateLocationList() : locationsList;
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        if (compareTwoTimeStamps(currentTime, timestamp) > 24) {
+            List<Location> newLocationsList = updateLocationList();
+            timestamp = new Timestamp(System.currentTimeMillis());
+            if (!newLocationsList.isEmpty()) {
+                locationsList = newLocationsList;
+            }
+        }
+        return locationsList;
     }
 
     public List<Location> updateLocationList() {
@@ -127,5 +133,19 @@ public class LocationService {
             log.error("Failed to parse json file. Exception: " + exception.getMessage());
         }
         return locations;
+    }
+
+    public static long compareTwoTimeStamps(Timestamp currentTime, Timestamp oldTime)
+    {
+        long milliseconds1 = oldTime.getTime();
+        long milliseconds2 = currentTime.getTime();
+
+        long diff = milliseconds2 - milliseconds1;
+        long diffSeconds = diff / 1000;
+        long diffMinutes = diff / (60 * 1000);
+        long diffHours = diff / (60 * 60 * 1000);
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+
+        return diffHours;
     }
 }

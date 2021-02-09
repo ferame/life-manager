@@ -1,7 +1,6 @@
 package backend.app.lifemanager.features.weather;
 
 import backend.app.lifemanager.features.location.LocationService;
-import backend.app.lifemanager.features.weather.dao.locations.Location;
 import backend.app.lifemanager.features.weather.dao.weather.WeatherForecast;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -63,17 +58,10 @@ public class WeatherService {
 //        return currentWeatherForecastMono.block();
     }
 
-    public List<Location> getForecastLocations() {
+//    public List<Location> getForecastLocations() {
 //        TODO: get the list from "http://bulk.openweathermap.org/sample/current.city.list.json.gz"
 //        Store it in local cache
 //        Serve first x matches.
-        List<Location> locations = new ArrayList<>();
-        try {
-            locations.addAll(locationService.downloadNewLocationList());
-        } catch (IOException e) {
-            log.error("Failed to download file");
-            log.error(e.getMessage());
-        }
-        return locations;
-    }
+//        return locationService.getLocationsList();
+//    }
 }

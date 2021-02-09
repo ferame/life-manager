@@ -1,5 +1,6 @@
 package backend.app.lifemanager.features.weather;
 
+import backend.app.lifemanager.features.location.LocationService;
 import backend.app.lifemanager.features.weather.dao.locations.Location;
 import backend.app.lifemanager.features.weather.dao.weather.WeatherForecast;
 import backend.app.lifemanager.security.authentication.IAuthenticationFacade;
@@ -17,23 +18,25 @@ import java.util.List;
 public class WeatherController {
     private final IAuthenticationFacade authenticationFacade;
     private final WeatherService weatherService;
+    private final LocationService locationService;
 
     @Autowired
-    public WeatherController(IAuthenticationFacade authenticationFacade, WeatherService weatherService) {
+    public WeatherController(IAuthenticationFacade authenticationFacade, WeatherService weatherService, LocationService locationService) {
         this.authenticationFacade = authenticationFacade;
         this.weatherService = weatherService;
+        this.locationService = locationService;
     }
 
     @GetMapping("/current/{location}")
     public WeatherForecast currentWeather(@PathVariable String location) {
-        Authentication authentication = authenticationFacade.getAuthentication();
-        String currentPrincipalName = authentication.getName();
+//        Authentication authentication = authenticationFacade.getAuthentication();
+//        String currentPrincipalName = authentication.getName();
         return weatherService.getCurrent(location);
     }
 
     @GetMapping("/locations")
     public List<Location> forecastLocations() {
-        return weatherService.getForecastLocations();
+        return locationService.getLocationsList();
     }
 
     @GetMapping("/unrestricted")
