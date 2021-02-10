@@ -34,9 +34,4 @@ public class BasicController {
 //                .collect(Collectors.toList());
         return "User: " + currentPrincipalName;
     }
-
-    @GetMapping("/unrestricted")
-    public String publicEndpoint() {
-        return "{message: Hello, apiState: public}";
-    }
 }

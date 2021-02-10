@@ -9,14 +9,6 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 public class UserDto {
-//    @NotNull
-//    @NotEmpty
-//    private String firstName;
-//
-//    @NotNull
-//    @NotEmpty
-//    private String lastName;
-
     @NotNull
     @NotEmpty
     private String username;
