@@ -45,6 +45,8 @@ public class LocationService {
         timestamp = new Timestamp(System.currentTimeMillis());
         if (locationsList.isEmpty()) {
             log.error("Failed to download available locations. Please investigate the issue. Download Url: {}, Download Path: {}", downloadUrl, downloadPath);
+        } else {
+            log.info("Loaded initial location list");
         }
     }
 
@@ -79,8 +81,7 @@ public class LocationService {
     private Optional<ReadableByteChannel> openDownloadStreamFromUrl() {
         ReadableByteChannel readableByteChannel = null;
         try {
-            URL url = null;
-            url = new URL(downloadUrl);
+            URL url = new URL(downloadUrl);
             readableByteChannel = Channels.newChannel(url.openStream());
         } catch (MalformedURLException exception) {
             log.error("Incorrect location download url: {}. Exception: {}", downloadUrl, exception.getMessage());
