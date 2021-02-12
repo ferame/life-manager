@@ -7,8 +7,10 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import '../weather_forecast/WeatherForecast.style.scss';
 import '../weather_forecast/WeatherIcons.style.scss';
 import weatherConditions from '../weather_forecast/weatherConditions';
+import { updateLocations } from 'redux/reducers/locationsSlice';
 
 const locations = [
+    '',
     'london',
     'vilnius',
     'kaunas'
@@ -58,6 +60,11 @@ export default function WeatherForecast() {
                 getOptionLabel={(option) => option.toUpperCase()}
                 renderInput={(params) => <TextField {...params} label="location selector" variant="outlined" />}
             />
+            <button 
+                onClick={() => dispatch(updateLocations(user.token))}
+            >
+                Get locations
+            </button>
         </div>
     );
 }

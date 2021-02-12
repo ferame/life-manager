@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../../redux/store';
+import { AppThunk, RootState } from '../../redux/store';
+import { updateLocations } from '../reducers/locationsSlice'
 
 interface User {
   username: string;
@@ -25,5 +26,12 @@ export const userSlice = createSlice({
 export const { setUser } = userSlice.actions;
 
 export const selectUser = (state: RootState) => state.user;
+
+export const login = (user: User): AppThunk => dispatch => {
+  dispatch(setUser(user));
+  console.log("Dispatced user setter");
+  updateLocations(user.token);
+  console.log("Called location getter");
+}
 
 export default userSlice.reducer;

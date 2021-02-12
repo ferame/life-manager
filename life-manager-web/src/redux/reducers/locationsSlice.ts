@@ -19,23 +19,32 @@ export const locationsSlice = createSlice({
   name: 'locations',
   initialState,
   reducers: {
-    update: (state, action: PayloadAction<Array<Location>>) => {
+    updateLocs: (state, action: PayloadAction<Array<Location>>) => {
         state.locationsList = action.payload;
     }
   },
 });
 
+export const { updateLocs } = locationsSlice.actions;
 
 export const updateLocations = (userToken: string): AppThunk => dispatch => {
+    console.log("Updating locations");
     Axios.get('api/weather/locations', {
         headers: {
             'Authorization': `Bearer ${userToken}`
           }
     }).then(response => {
+        const locationsArray: Array<Location> = response?.data?.map((locationItem: { name: string; country: string; }) => {
+            return {
+                city: locationItem?.name,
+                country: locationItem?.country
+            }
+        })
+        dispatch(updateLocs(locationsArray));
         console.log(response);
     });
 }
 
-export const selectCount = (state: RootState) => state.locations.locationsList;
+export const selectLocations = (state: RootState) => state.locations.locationsList;
 
 export default locationsSlice.reducer;
