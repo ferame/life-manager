@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Service
 public class CoursesHardcodedService {
 
-	private static List<Course> courses = new ArrayList<>();
+	private static final List<Course> courses = new ArrayList<>();
 	private static long idCounter = 0;
 
 	private final IAuthenticationFacade authenticationFacade;

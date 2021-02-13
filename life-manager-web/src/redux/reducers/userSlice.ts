@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../../redux/store';
+import { AppThunk, RootState } from '../../redux/store';
+import { updateLocations } from '../reducers/locationsSlice'
 
 interface User {
   username: string;
@@ -19,39 +20,18 @@ export const userSlice = createSlice({
         state.username = action.payload.username;
         state.token = action.payload.token;
       }
-    // increment: state => {
-    //   // Redux Toolkit allows us to write "mutating" logic in reducers. It
-    //   // doesn't actually mutate the state because it uses the Immer library,
-    //   // which detects changes to a "draft state" and produces a brand new
-    //   // immutable state based off those changes
-    //   state.value += 1;
-    // },
-    // decrement: state => {
-    //   state.value -= 1;
-    // },
-    // // Use the PayloadAction type to declare the contents of `action.payload`
-    // incrementByAmount: (state, action: PayloadAction<number>) => {
-    //   state.value += action.payload;
-    // },
   },
 });
 
 export const { setUser } = userSlice.actions;
 
-// The function below is called a thunk and allows us to perform async logic. It
-// can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
-// will call the thunk with the `dispatch` function as the first argument. Async
-// code can then be executed and other actions can be dispatched
-
-// export const incrementAsync = (amount: number): AppThunk => dispatch => {
-//   setTimeout(() => {
-//     dispatch(incrementByAmount(amount));
-//   }, 1000);
-// };
-
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
 export const selectUser = (state: RootState) => state.user;
+
+export const login = (user: User): AppThunk => dispatch => {
+  dispatch(setUser(user));
+  console.log("Dispatced user setter");
+  updateLocations(user.token);
+  console.log("Called location getter");
+}
 
 export default userSlice.reducer;

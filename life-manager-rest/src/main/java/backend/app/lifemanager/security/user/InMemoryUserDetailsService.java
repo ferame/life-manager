@@ -18,7 +18,7 @@ public class InMemoryUserDetailsService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public static List<User> inMemoryUserList = new ArrayList<>();
+    public static final List<User> inMemoryUserList = new ArrayList<>();
 
     Long nextId = 2L;
 

@@ -72,15 +72,19 @@ public class AuthenticationController {
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String authToken = request.getHeader(tokenHeader);
         final String token = authToken.substring(7);
-        String username = tokenUtil.getUsernameFromToken(token);
-        User user = (User) jwtInMemoryUserDetailsService.loadUserByUsername(username);
+//        String username = tokenUtil.getUsernameFromToken(token);
+//        User user = (User) jwtInMemoryUserDetailsService.loadUserByUsername(username);
+
+        final ResponseEntity responseEntity;
 
         if (tokenUtil.canTokenBeRefreshed(token) && !disabledTokenService.isTokenDisabled(token)) {
             String refreshedToken = tokenUtil.refreshToken(token);
-            return ResponseEntity.ok(new TokenResponse(refreshedToken));
+            responseEntity = ResponseEntity.ok(new TokenResponse(refreshedToken));
         } else {
-            return ResponseEntity.badRequest().body(null);
+            responseEntity = ResponseEntity.badRequest().body(null);
         }
+
+        return responseEntity;
     }
 
     @PostMapping(value = "${api.user.register}")
@@ -91,15 +95,10 @@ public class AuthenticationController {
         } else {
             newUserDetails = Optional.empty();
         }
-
-        BasicResponse response;
-        if (newUserDetails.isPresent()) {
-//            TODO: remove the id from here, as that is not really meant for api user to be seen
-            response = new BasicResponse(newUserDetails.get().getId(), newUserDetails.get().getUsername());
-        } else {
-            response = new BasicResponse(1L, "Username is already taken.");
-        }
-        return response;
+        //            TODO: remove the id from here, as that is not really meant for api user to be seen
+        return newUserDetails
+                .map(user -> new BasicResponse(user.getId(), user.getUsername()))
+                .orElseGet(() -> new BasicResponse(1L, "Username is already taken."));
     }
 
     @GetMapping(value = "${api.user.signout}")

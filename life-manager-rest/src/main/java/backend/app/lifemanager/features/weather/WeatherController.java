@@ -1,6 +1,8 @@
 package backend.app.lifemanager.features.weather;
 
-import backend.app.lifemanager.features.dao.WeatherForecast;
+import backend.app.lifemanager.features.location.LocationService;
+import backend.app.lifemanager.features.weather.dao.locations.Location;
+import backend.app.lifemanager.features.weather.dao.weather.WeatherForecast;
 import backend.app.lifemanager.security.authentication.IAuthenticationFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,24 +18,25 @@ import java.util.List;
 public class WeatherController {
     private final IAuthenticationFacade authenticationFacade;
     private final WeatherService weatherService;
+    private final LocationService locationService;
 
     @Autowired
-    public WeatherController(IAuthenticationFacade authenticationFacade, WeatherService weatherService) {
+    public WeatherController(IAuthenticationFacade authenticationFacade, WeatherService weatherService, LocationService locationService) {
         this.authenticationFacade = authenticationFacade;
         this.weatherService = weatherService;
+        this.locationService = locationService;
     }
 
     @GetMapping("/current/{location}")
     public WeatherForecast currentWeather(@PathVariable String location) {
-        Authentication authentication = authenticationFacade.getAuthentication();
-        String currentPrincipalName = authentication.getName();
+//        Authentication authentication = authenticationFacade.getAuthentication();
+//        String currentPrincipalName = authentication.getName();
         return weatherService.getCurrent(location);
     }
 
     @GetMapping("/locations")
-    public List<String> forecastLocations() {
-
-        return new ArrayList<>();
+    public List<Location> forecastLocations() {
+        return locationService.getLocationsList();
     }
 
     @GetMapping("/unrestricted")

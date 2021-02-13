@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DisabledTokenService {
-    TokenUtil tokenUtil;
+    final TokenUtil tokenUtil;
     private final DisabledTokenRepo disabledTokenRepository;
 
     @Autowired
