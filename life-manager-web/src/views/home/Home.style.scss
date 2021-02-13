@@ -1,0 +1,16 @@
+.widgets-grid{
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+}
+div.widgets-grid{
+    div.widget{
+        margin: 1%;
+        border-radius: 4px;
+        padding: 1em;
+        border-color: black;
+        border-style: solid;
+    }
+}
