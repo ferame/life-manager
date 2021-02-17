@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateForecast, selectWeather } from '../../redux/reducers/weatherSlice';
 import {selectUser} from '../../redux/reducers/userSlice';
 import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import '../weather_forecast/WeatherForecast.style.scss';
 import '../weather_forecast/WeatherIcons.style.scss';
 import weatherConditions from '../weather_forecast/weatherConditions';
@@ -30,6 +30,7 @@ export default function WeatherForecast() {
     const user = useSelector(selectUser);
     const weather = useSelector(selectWeather);
     const [loc, setLoc] = useState<string>(weather.location);
+    const [upLoc, setUpLoc] = useState<Location>({city: "", country: ""});
     const reduxLocations = useSelector(selectLocations);
     const [matchedLocations, setMatchedLocations] = useState(Array<Location>());
     const dispatch = useDispatch();
@@ -48,6 +49,12 @@ export default function WeatherForecast() {
             console.log("hello");
         }
     }, [searchText, setMatchedLocations])
+
+    const filterOptions = createFilterOptions({
+        matchFrom: 'any',
+        limit: 20,
+        stringify: (option: Location) => `${option.city}, ${option.country}`
+    })
 
     return (
         <div className="weather-component widget">
@@ -94,6 +101,16 @@ export default function WeatherForecast() {
                     <p key={index}>{entry.city}</p>
                 ))}
             </div>
+            <Autocomplete
+                value={upLoc}
+                onChange={(event: any, newLocation: Location | null) => {
+                    newLocation ? setUpLoc(newLocation) : console.log("Null location");
+                }}
+                options={reduxLocations}
+                filterOptions={filterOptions}
+                getOptionLabel={(option) => `${option.city}, ${option.country}`}
+                renderInput={(params) => <TextField {...params} label="location selector" variant="outlined" />}
+            />
         </div>
     );
 }
