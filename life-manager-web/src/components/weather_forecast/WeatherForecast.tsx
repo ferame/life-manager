@@ -8,14 +8,6 @@ import '../weather_forecast/WeatherForecast.style.scss';
 import '../weather_forecast/WeatherIcons.style.scss';
 import weatherConditions from '../weather_forecast/weatherConditions';
 import { selectLocations, updateLocations } from 'redux/reducers/locationsSlice';
-import { bestLocationMatches } from 'features/location/locationMatcher';
-
-const locations = [
-    '',
-    'london',
-    'vilnius',
-    'kaunas'
-];
 
 interface Location {
     city: string;
@@ -29,26 +21,15 @@ const getWeatherIconName = (forecastId: string) => {
 export default function WeatherForecast() {
     const user = useSelector(selectUser);
     const weather = useSelector(selectWeather);
-    const [loc, setLoc] = useState<string>(weather.location);
-    const [upLoc, setUpLoc] = useState<Location>({city: "", country: ""});
+    const [loc, setLoc] = useState<Location>({city: weather.location, country: "PLACEHOLDER"});
     const reduxLocations = useSelector(selectLocations);
-    const [matchedLocations, setMatchedLocations] = useState(Array<Location>());
     const dispatch = useDispatch();
-    const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
         if(loc !== undefined) {
-            dispatch(updateForecast(user.token, loc));   
+            dispatch(updateForecast(user.token, loc.city));   
         }  
     }, [loc, user, dispatch])
-
-    useEffect(() => {
-        if(searchText.trim().length > 0) {
-            setMatchedLocations(bestLocationMatches(5, searchText, reduxLocations));
-        } else {
-            console.log("hello");
-        }
-    }, [searchText, setMatchedLocations])
 
     const filterOptions = createFilterOptions({
         matchFrom: 'any',
@@ -75,40 +56,19 @@ export default function WeatherForecast() {
                     </div>
                 </div>
             </div>
-            <Autocomplete
-                value={loc}
-                onChange={(event: any, newLocation: string | null) => {
-                    setLoc(newLocation === null ? "" : newLocation);
-                }}
-                options={locations}
-                getOptionLabel={(option) => option.toUpperCase()}
-                renderInput={(params) => <TextField {...params} label="location selector" variant="outlined" />}
-            />
             <button 
                 onClick={() => dispatch(updateLocations(user.token))}
             >
                 Get locations
             </button>
-            <form>
-                <label>
-                    Location search:
-                    <input type="text" value={searchText} onChange={(event) => setSearchText(event.target.value)}/>
-                </label>
-                <input type="submit" value="Submit"/>
-            </form>
-            <div>
-                {matchedLocations.map((entry, index) => (
-                    <p key={index}>{entry.city}</p>
-                ))}
-            </div>
             <Autocomplete
-                value={upLoc}
+                value={loc}
                 onChange={(event: any, newLocation: Location | null) => {
-                    newLocation ? setUpLoc(newLocation) : console.log("Null location");
+                    newLocation ? setLoc(newLocation) : console.log("Null location");
                 }}
                 options={reduxLocations}
                 filterOptions={filterOptions}
-                getOptionLabel={(option) => `${option.city}, ${option.country}`}
+                getOptionLabel={(option) => option.city !== "" && option.country !== "" ? `${option.city}, ${option.country}` : ''}
                 renderInput={(params) => <TextField {...params} label="location selector" variant="outlined" />}
             />
         </div>
