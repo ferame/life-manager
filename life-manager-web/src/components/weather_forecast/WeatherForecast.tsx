@@ -22,8 +22,15 @@ export default function WeatherForecast() {
     const user = useSelector(selectUser);
     const weather = useSelector(selectWeather);
     const [loc, setLoc] = useState<Location>({city: weather.location, country: "PLACEHOLDER"});
-    const reduxLocations = useSelector(selectLocations);
+    const locations = useSelector(selectLocations);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if(user.token.length !== 0 && locations.length === 0){
+            dispatch(updateLocations(user.token));
+            console.log("Getting locations");
+        }
+    }, [dispatch, user.token]);
 
     useEffect(() => {
         if(loc !== undefined) {
@@ -56,17 +63,12 @@ export default function WeatherForecast() {
                     </div>
                 </div>
             </div>
-            <button 
-                onClick={() => dispatch(updateLocations(user.token))}
-            >
-                Get locations
-            </button>
             <Autocomplete
                 value={loc}
                 onChange={(event: any, newLocation: Location | null) => {
                     newLocation ? setLoc(newLocation) : console.log("Null location");
                 }}
-                options={reduxLocations}
+                options={locations}
                 filterOptions={filterOptions}
                 getOptionLabel={(option) => option.city !== "" && option.country !== "" ? `${option.city}, ${option.country}` : ''}
                 renderInput={(params) => <TextField {...params} label="location selector" variant="outlined" />}
