@@ -50,4 +50,22 @@ public class WeatherService {
 //        TODO: add handling of the failing calls.
         return currentWeatherForecastMono.block();
     }
+
+    public WeatherForecast getCurrent(String country, String city) {
+        Mono<WeatherForecast> currentWeatherForecastMono = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .scheme("http")
+                        .host(weatherAuthority)
+                        .path(weatherPath)
+                        .queryParam("q", String.format("%s,%s", city, country))
+                        .queryParam("appid", apiKey)
+                        .queryParam("units", units)
+                        .build()
+                )
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(WeatherForecast.class);
+//        TODO: add handling of the failing calls.
+        return currentWeatherForecastMono.block();
+    }
 }

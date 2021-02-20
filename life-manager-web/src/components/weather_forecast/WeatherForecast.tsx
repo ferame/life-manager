@@ -21,8 +21,10 @@ const getWeatherIconName = (forecastId: string) => {
 export default function WeatherForecast() {
     const user = useSelector(selectUser);
     const weather = useSelector(selectWeather);
-    const [loc, setLoc] = useState<Location>({city: weather.location, country: "PLACEHOLDER"});
     const locations = useSelector(selectLocations);
+    
+    const [location, setLocation] = useState<Location>(weather.location);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -30,13 +32,13 @@ export default function WeatherForecast() {
             dispatch(updateLocations(user.token));
             console.log("Getting locations");
         }
-    }, [dispatch, user.token]);
+    }, [dispatch, user.token, locations]);
 
     useEffect(() => {
-        if(loc !== undefined) {
-            dispatch(updateForecast(user.token, loc.city));   
+        if(location !== undefined && location.city !== undefined && location.country !== undefined) {
+            dispatch(updateForecast(user.token, location));   
         }  
-    }, [loc, user, dispatch])
+    }, [location, user, dispatch])
 
     const filterOptions = createFilterOptions({
         matchFrom: 'any',
@@ -49,7 +51,7 @@ export default function WeatherForecast() {
             <div className="weather-card">
                 <div className="current-temp">
                     <span className="temp">{weather.temperature}&deg;</span>
-                    <span className="location">{weather.location}</span>
+                    <span className="location">{weather.location.city}</span>
                 </div>
                 <div className="current-weather">
                     <div className="conditions weatherIcon">
@@ -64,9 +66,9 @@ export default function WeatherForecast() {
                 </div>
             </div>
             <Autocomplete
-                value={loc}
+                value={location}
                 onChange={(event: any, newLocation: Location | null) => {
-                    newLocation ? setLoc(newLocation) : console.log("Null location");
+                    newLocation ? setLocation(newLocation) : console.log("Null location");
                 }}
                 options={locations}
                 filterOptions={filterOptions}
