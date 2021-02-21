@@ -3,7 +3,7 @@ import { AppThunk, RootState } from '../store';
 import Axios from 'axios';
 
 interface Weather {
-  location: string;
+  location: Location;
   temperature: number;
   windspeed: number;
   rainfall: number;
@@ -11,8 +11,16 @@ interface Weather {
   id: string;
 }
 
+interface Location {
+  city: string;
+  country: string;
+}
+
 const initialState: Weather = {
-  location: '',
+  location: {
+    city: "",
+    country: ""
+  },
   temperature: 0,
   windspeed: 0,
   rainfall: 0,
@@ -24,7 +32,7 @@ export const weatherSlice = createSlice({
   name: 'weather',
   initialState,
   reducers: {
-    setLocation: (state, action: PayloadAction<string>) => {
+    setLocation: (state, action: PayloadAction<Location>) => {
       state.location = action.payload;
     },
     setTemperature: (state, action: PayloadAction<number>) => {
@@ -43,8 +51,8 @@ export const weatherSlice = createSlice({
 
 export const { setLocation, setTemperature, setForecast } = weatherSlice.actions;
 
-export const updateForecast = (userToken: string, location: string): AppThunk => dispatch => {
-    Axios.get('api/weather/current/' + location, {
+export const updateForecast = (userToken: string, location: Location): AppThunk => dispatch => {
+    Axios.get(`api/weather/current/${location.country}/${location.city}`, {
       headers: {
         'Authorization': `Bearer ${userToken}`
       }
@@ -55,7 +63,10 @@ export const updateForecast = (userToken: string, location: string): AppThunk =>
       let weatherId = response?.data?.weather?.[0]?.id;
       if(loc !== undefined && temp !== undefined && desc !== undefined && weatherId !== undefined) {
         dispatch(setForecast({
-          location: loc,
+          location: {
+            city: loc,
+            country: location.country
+          },
           temperature: Math.round(temp * 10) / 10,
           windspeed: response?.data?.wind?.speed ?? 0,
           rainfall: response?.data?.rain?.['1h'] ?? 0,

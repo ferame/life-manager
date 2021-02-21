@@ -34,6 +34,11 @@ public class WeatherController {
         return weatherService.getCurrent(location);
     }
 
+    @GetMapping("/current/{country}/{city}")
+    public WeatherForecast currentWeather(@PathVariable String country, @PathVariable String city) {
+        return weatherService.getCurrent(country, city);
+    }
+
     @GetMapping("/locations")
     public List<Location> forecastLocations() {
         return locationService.getLocationsList();
