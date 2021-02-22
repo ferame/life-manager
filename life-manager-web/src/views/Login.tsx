@@ -3,7 +3,7 @@ import React from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { selectUser, setUser } from '../redux/reducers/userSlice';
+import { selectUser, authenticateUser } from '../redux/reducers/userSlice';
 
 export default function Login () {
     const [username, setUsername] = useState("");
@@ -22,7 +22,7 @@ export default function Login () {
             console.log("Response received");
             console.log(response);
             if(response.data && response.data.token) {
-                dispatch(setUser({
+                dispatch(authenticateUser({
                     username: username,
                     token: response.data.token
                 }));
