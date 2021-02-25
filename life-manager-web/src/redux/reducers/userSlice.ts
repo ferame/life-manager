@@ -34,4 +34,9 @@ export const login = (user: User): AppThunk => dispatch => {
   console.log("Called location getter");
 }
 
+export const logout = (): AppThunk => dispatch => {
+  dispatch(setUser(initialState));
+  console.log("User logged out");
+}
+
 export default userSlice.reducer;

@@ -7,6 +7,8 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@material-ui/core';
+import { logout } from 'redux/reducers/userSlice';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function TopBar() {
     const classes = useStyles();
+    const dispatch = useDispatch();
     let history = useHistory();
     return (
         <div className={classes.root}>
@@ -39,6 +42,10 @@ export default function TopBar() {
                 News
             </Typography>
             <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>
+            <Button color="inherit" onClick={() => {
+                dispatch(logout());
+                history.push('/login');
+              }}>Logout</Button>
             <Button color="inherit" onClick={() => history.push('/register')}>Register</Button>
             </Toolbar>
         </AppBar>
