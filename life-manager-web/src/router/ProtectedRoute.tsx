@@ -13,7 +13,6 @@ interface ProtectedRouteProps extends RouteProps {
 
 const ProtectedRoute = (props: ProtectedRouteProps) => {
     const { component: Component, isAuthenticated, ...rest } = props;
-
     return (
         <Route
             {...rest}
