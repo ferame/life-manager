@@ -23,9 +23,9 @@ export default function App() {
       <Switch>
         <Route path='/register' component={Register} />
         <Route path='/login' component={Login} />
-        <ProtectedRoute isAuthenticated={isAuthenticated} authenticationPath={'/login'} restrictedPath='/contact' component={Contact} exact={true} />
-        <ProtectedRoute isAuthenticated={isAuthenticated} authenticationPath={'/login'} restrictedPath='/about' component={About} exact={true} />
-        <ProtectedRoute isAuthenticated={isAuthenticated} authenticationPath={'/login'} restrictedPath='/' component={Home} exact={true} />
+        <ProtectedRoute isAuthenticated={isAuthenticated} path='/contact' component={Contact} exact={true} />
+        <ProtectedRoute isAuthenticated={isAuthenticated} path='/about' component={About} exact={true} />
+        <ProtectedRoute isAuthenticated={isAuthenticated} path='/' component={Home} exact={true} />
       </Switch>
     </div>
   );
