@@ -16,22 +16,30 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-      setUser: (state, action: PayloadAction<User>) => {
+      authenticateUser: (state, action: PayloadAction<User>) => {
         state.username = action.payload.username;
         state.token = action.payload.token;
+      },
+      unauthenticateUser: (state) => {
+        state.username = "";
+        state.token = ""
       }
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { authenticateUser, unauthenticateUser } = userSlice.actions;
 
 export const selectUser = (state: RootState) => state.user;
 
 export const login = (user: User): AppThunk => dispatch => {
-  dispatch(setUser(user));
+  dispatch(authenticateUser(user));
   console.log("Dispatced user setter");
   updateLocations(user.token);
   console.log("Called location getter");
+}
+
+export const logout = (): AppThunk => dispatch => {
+  dispatch(unauthenticateUser());
 }
 
 export default userSlice.reducer;
