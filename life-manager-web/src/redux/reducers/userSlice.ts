@@ -5,11 +5,13 @@ import { updateLocations } from '../reducers/locationsSlice'
 interface User {
   username: string;
   token: string;
+  isAuthenticated: boolean;
 }
 
 const initialState: User = {
   username: "",
-  token: ""
+  token: "",
+  isAuthenticated: false
 };
 
 export const userSlice = createSlice({
@@ -19,10 +21,12 @@ export const userSlice = createSlice({
       authenticateUser: (state, action: PayloadAction<User>) => {
         state.username = action.payload.username;
         state.token = action.payload.token;
+        state.isAuthenticated = true;
       },
       unauthenticateUser: (state) => {
         state.username = initialState.username;
         state.token = initialState.token;
+        state.isAuthenticated = false;
       }
   },
 });

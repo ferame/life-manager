@@ -16,16 +16,15 @@ import { selectUser } from 'redux/reducers/userSlice';
 
 export default function App() {
   const user = useSelector(selectUser);
-  let isAuthenticated = user.token.length > 0;
   return (
     <div className="App">
       <TopBar/>
       <Switch>
         <Route path='/register' component={Register} />
         <Route path='/login' component={Login} />
-        <ProtectedRoute isAuthenticated={isAuthenticated} path='/contact' component={Contact} exact={true} />
-        <ProtectedRoute isAuthenticated={isAuthenticated} path='/about' component={About} exact={true} />
-        <ProtectedRoute isAuthenticated={isAuthenticated} path='/' component={Home} exact={true} />
+        <ProtectedRoute isAuthenticated={user.isAuthenticated} path='/contact' component={Contact} exact={true} />
+        <ProtectedRoute isAuthenticated={user.isAuthenticated} path='/about' component={About} exact={true} />
+        <ProtectedRoute isAuthenticated={user.isAuthenticated} path='/' component={Home} exact={true} />
       </Switch>
     </div>
   );
