@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function TopBar() {
     const classes = useStyles();
     const dispatch = useDispatch();
-    let history = useHistory();
+    const history = useHistory();
     return (
         <div className={classes.root}>
         <AppBar position="static">
@@ -42,10 +42,7 @@ export default function TopBar() {
                 News
             </Typography>
             <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>
-            <Button color="inherit" onClick={() => {
-                dispatch(logout());
-                history.push('/login');
-              }}>Logout</Button>
+            <Button color="inherit" onClick={() => dispatch(logout())}>Logout</Button>
             <Button color="inherit" onClick={() => history.push('/register')}>Register</Button>
             </Toolbar>
         </AppBar>
