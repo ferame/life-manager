@@ -24,7 +24,8 @@ export default function Login () {
             if(response.data && response.data.token) {
                 dispatch(authenticateUser({
                     username: username,
-                    token: response.data.token
+                    token: response.data.token,
+                    isAuthenticated: false
                 }));
                 history.push('/');
             }
