@@ -5,9 +5,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ develop, master ]
   pull_request:
-    branches: [ develop ]
+    branches: [ develop, master ]
 
 jobs:
   build:
@@ -22,3 +22,5 @@ jobs:
         java-version: 11
     - name: Build with Maven
       run: mvn -f life-manager-rest/pom.xml clean package
+
+
