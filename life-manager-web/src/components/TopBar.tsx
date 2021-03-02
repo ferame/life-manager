@@ -9,6 +9,7 @@ import { useHistory } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 import { logout } from 'redux/reducers/userSlice';
 import { useDispatch } from 'react-redux';
+import UserMenu from './UserMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,18 +33,19 @@ export default function TopBar() {
         <div className={classes.root}>
         <AppBar position="static">
             <Toolbar>
-            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                <MenuIcon />
-            </IconButton>
-            <Button color="inherit" onClick={() => history.push('/')}>Home</Button>
-            <Button color="inherit" onClick={() => history.push('/contact')}>Contact</Button>
-            <Button color="inherit" onClick={() => history.push('/about')}>About</Button>
-            <Typography variant="h6" className={classes.title}>
-                News
-            </Typography>
-            <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>
-            <Button color="inherit" onClick={() => dispatch(logout())}>Logout</Button>
-            <Button color="inherit" onClick={() => history.push('/register')}>Register</Button>
+              <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                  <MenuIcon />
+              </IconButton>
+              <Button color="inherit" onClick={() => history.push('/')}>Home</Button>
+              <Button color="inherit" onClick={() => history.push('/contact')}>Contact</Button>
+              <Button color="inherit" onClick={() => history.push('/about')}>About</Button>
+              <Typography variant="h6" className={classes.title}>
+                  News
+              </Typography>
+              <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>
+              <Button color="inherit" onClick={() => dispatch(logout())}>Logout</Button>
+              <Button color="inherit" onClick={() => history.push('/register')}>Register</Button>
+              <UserMenu />
             </Toolbar>
         </AppBar>
         </div>
