@@ -3,8 +3,8 @@ import { AccountCircle } from '@material-ui/icons';
 import IconButton from '@material-ui/core/IconButton';
 import Menu, { MenuProps } from '@material-ui/core/Menu';
 import { MenuItem } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
-import { logout } from 'redux/reducers/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout, selectUser } from 'redux/reducers/userSlice';
 import { useHistory } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -39,10 +39,9 @@ export default function UserMenu(){
         setAnchorEl(null);
     };
 
-    // const [isOpen, setIsOpen] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
-    // const user = useSelector(selectUser);
+    const user = useSelector(selectUser);
 
     return (
         <div>
@@ -66,8 +65,8 @@ export default function UserMenu(){
                     horizontal: 'center',
                 }}
                 >
-                <MenuItem onClick={() => history.push('/about')}>Details</MenuItem>
-                <MenuItem onClick={() => dispatch(logout())}>Logout</MenuItem>
+                {user.isAuthenticated ? <MenuItem onClick={() => history.push('/about')}>Profile</MenuItem> : <MenuItem onClick={() => history.push('/register')}>Register</MenuItem>}
+                {user.isAuthenticated ? <MenuItem onClick={() => dispatch(logout())}>Logout</MenuItem> : <MenuItem onClick={() => history.push('/login')}>Login</MenuItem>}
             </StyledMenu>
         </div>
     );
