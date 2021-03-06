@@ -4,7 +4,6 @@ import backend.app.lifemanager.features.weather.dao.locations.Location;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -67,10 +66,14 @@ public class LocationService {
         String filePath = new File(downloadPath).getAbsolutePath();
         List<Location> locations = new ArrayList<>();
         if (readableByteChannel.isPresent() && downloadFileViaStream(readableByteChannel.get(), filePath)) {
-            //        TODO: delete old json, if there is one.
             decompressGzip(filePath).ifPresentOrElse(
                     file -> {
                         locations.addAll(parseDownloadedJson(file));
+                        if (file.delete()) {
+                            log.info("Deleted the json file: {}", file.getName());
+                        } else {
+                            log.warn("Failed to delete the json file {}", file.getName());
+                        }
             //        TODO: delete the gz file if decompressing is successful
                     },
                     () -> log.warn("Failed to find a decompressed json file to parse"));
@@ -106,10 +109,10 @@ public class LocationService {
     }
 
     private Optional<File> decompressGzip(String filePath) {
-        Path gzipPath = Paths.get(filePath);
+        File gzipFile = Paths.get(filePath).toFile();
         File decompressedFile = new File(decompressedPath);
         try (
-                GZIPInputStream gis = new GZIPInputStream(new FileInputStream(gzipPath.toFile()));
+                GZIPInputStream gis = new GZIPInputStream(new FileInputStream(gzipFile));
                 FileOutputStream fos = new FileOutputStream(decompressedFile.getAbsolutePath())
         ) {
             byte[] buffer = new byte[1024];
@@ -121,6 +124,12 @@ public class LocationService {
         } catch (Exception exception) {
             log.error("Failed to get gzip input stream of file output stream of decompressed file. Exception: " + exception.getMessage());
             return Optional.empty();
+        } finally {
+            if (gzipFile.delete()) {
+                log.info("Deleted the gzip file: {}", gzipFile.getName());
+            } else {
+                log.warn("Failed to delete the gzip file {}", gzipFile.getName());
+            }
         }
     }
 
