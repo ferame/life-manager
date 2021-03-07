@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../../redux/store';
 import { updateLocations } from '../reducers/locationsSlice'
 
-interface User {
+export interface User {
   username: string;
   token: string;
   isAuthenticated: boolean;
