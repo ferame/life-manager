@@ -16,7 +16,10 @@ export const store = configureStore({
     locations: locationsReducer,
     weather: weatherReducer
   },
-  middleware: [thunk, ...getDefaultMiddleware()]
+  middleware: [thunk, ...getDefaultMiddleware()],
+  preloadedState: {
+    user: persistedState
+  }
 });
 
 store.subscribe(throttle(() => {

@@ -9,6 +9,7 @@ export const loadState = () => {
             return undefined;
         } else {
             console.log("Loaded local state");
+            console.log(serializedState);
         }
         return JSON.parse(serializedState);
     } catch (err) {
