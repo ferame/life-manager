@@ -6,11 +6,15 @@ import { useHistory } from 'react-router-dom';
 import { selectUser, authenticateUser } from '../redux/reducers/userSlice';
 
 export default function Login () {
+    let history = useHistory();
+    const user = useSelector(selectUser);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const dispatch = useDispatch();
-    let history = useHistory();
-    const user = useSelector(selectUser);
+
+    if (user.isAuthenticated) {
+        history.push("/");
+    }
     
     function handleSubmit (e:any) {
         e.preventDefault();
@@ -29,8 +33,6 @@ export default function Login () {
                 }));
                 history.push('/');
             }
-            // TODO: remove this log
-            console.log(user);
         })
         .catch(function (error) {
             if (error.response) {
@@ -43,8 +45,6 @@ export default function Login () {
             }
             console.log(error);
         });
-        console.log(username);
-        console.log(password);
     }
 
     return (

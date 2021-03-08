@@ -1,4 +1,5 @@
 import { User } from "./reducers/userSlice";
+import { Location } from "./reducers/weatherSlice";
 
 export const loadState = () => {
     console.log("State load called");
@@ -18,9 +19,16 @@ export const loadState = () => {
     }
 };
 
-export const saveState = (state: User) => {
+export interface PersistedState {
+    user: User;
+    location: Location;
+}
+
+export const saveState = (user: User) => {
     try {
-        const serializedState = JSON.stringify(state);
+        const serializedState = JSON.stringify({
+            user
+        });
         localStorage.setItem('state', serializedState);
         console.log("Saved to local state");
     } catch (err) {

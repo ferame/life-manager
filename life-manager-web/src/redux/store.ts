@@ -5,9 +5,9 @@ import locationsReducer from './reducers/locationsSlice';
 import weatherReducer from './reducers/weatherSlice';
 import thunk from 'redux-thunk';
 import throttle from 'lodash/throttle';
-import { loadState, saveState } from './localStorage';
+import { loadState, PersistedState, saveState } from './localStorage';
 
-export const persistedState = loadState();
+export const persistedState: PersistedState = loadState();
 
 export const store = configureStore({
   reducer: {
@@ -18,12 +18,11 @@ export const store = configureStore({
   },
   middleware: [thunk, ...getDefaultMiddleware()],
   preloadedState: {
-    user: persistedState
+    user: persistedState.user
   }
 });
 
 store.subscribe(throttle(() => {
-  console.log("Subscribing the state");
   saveState(store.getState().user);
 }, 1000));
 
