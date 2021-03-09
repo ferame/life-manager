@@ -20,12 +20,13 @@ export const store = configureStore({
   },
   middleware: [thunk, ...getDefaultMiddleware()],
   preloadedState: {
-    user: persistedState.user
+    user: persistedState.user,
+    userOptions: persistedState.userOptions
   }
 });
 
 store.subscribe(throttle(() => {
-  saveState(store.getState().user);
+  saveState(store.getState().user, store.getState().userOptions);
 }, 1000));
 
 export type RootState = ReturnType<typeof store.getState>;

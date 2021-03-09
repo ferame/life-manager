@@ -8,6 +8,7 @@ import '../weather_forecast/WeatherForecast.style.scss';
 import '../weather_forecast/WeatherIcons.style.scss';
 import weatherConditions from '../weather_forecast/weatherConditions';
 import { selectLocations, updateLocations } from 'redux/reducers/locationsSlice';
+import { changeLocation, selectUserOptions } from 'redux/reducers/userOptionsSlice';
 
 interface Location {
     city: string;
@@ -22,8 +23,9 @@ export default function WeatherForecast() {
     const user = useSelector(selectUser);
     const weather = useSelector(selectWeather);
     const locations = useSelector(selectLocations);
+    const locationOption = useSelector(selectUserOptions).location;
     
-    const [location, setLocation] = useState<Location>(weather.location);
+    const [location, setLocation] = useState<Location>(locationOption);
 
     const dispatch = useDispatch();
 
@@ -35,8 +37,9 @@ export default function WeatherForecast() {
     }, [dispatch, user.token, locations]);
 
     useEffect(() => {
-        if(location !== undefined && location.city !== undefined && location.country !== undefined) {
-            dispatch(updateForecast(user.token, location));   
+        if(location?.city !== undefined && location?.country !== undefined) {
+            dispatch(updateForecast(user.token, location));
+            dispatch(changeLocation(location));
         }  
     }, [location, user, dispatch])
 

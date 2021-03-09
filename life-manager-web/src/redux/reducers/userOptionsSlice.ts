@@ -1,28 +1,36 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../redux/store';
+// import { some, isEqual } from 'lodash';
+import { Location } from './weatherSlice';
 
 export interface UserOptions {
-  locations: Location[];
+  location: Location; //TODO: change to array later
 }
 
 const initialState: UserOptions = {
-  locations: []
+  location: {
+    city: "",
+    country: ""
+  }
 };
 
 export const userOptionsSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-      addLocation: (state, action: PayloadAction<Location>) => {
-        state.locations.push(action.payload)
-      },
-      removeLocation: (state, action: PayloadAction<Location>) => {
-        state.locations = state.locations.filter((entry) => entry !== action.payload)
-      }
+    //   addLocation: (state, action: PayloadAction<Location>) => {
+    //     some(state.locations, locationEntry => isEqual(locationEntry, action.payload)) ?? state.locations.push(action.payload);
+    //   },
+    //   removeLocation: (state, action: PayloadAction<Location>) => {
+    //     state.locations = state.locations.filter((entry) => entry !== action.payload)
+    //   }
+    changeLocation: (state, action: PayloadAction<Location>) => {
+        state.location = action.payload;
+    }
   },
 });
 
-export const { addLocation, removeLocation } = userOptionsSlice.actions;
+export const { changeLocation/*, addLocation, removeLocation*/ } = userOptionsSlice.actions;
 
 export const selectUserOptions = (state: RootState) => state.userOptions;
 
