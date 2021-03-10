@@ -24,8 +24,8 @@ export const userSlice = createSlice({
         state.isAuthenticated = true;
       },
       unauthenticateUser: (state) => {
-        state.username = initialState.username;
-        state.token = initialState.token;
+        state.username = initialUserState.username;
+        state.token = initialUserState.token;
         state.isAuthenticated = false;
       }
   },
