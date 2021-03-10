@@ -7,7 +7,7 @@ export interface UserOptions {
   location: Location; //TODO: change to array later
 }
 
-const initialState: UserOptions = {
+export const initialUserOptionsState: UserOptions = {
   location: {
     city: "",
     country: ""
@@ -16,7 +16,7 @@ const initialState: UserOptions = {
 
 export const userOptionsSlice = createSlice({
   name: 'user',
-  initialState,
+  initialState: initialUserOptionsState,
   reducers: {
     //   addLocation: (state, action: PayloadAction<Location>) => {
     //     some(state.locations, locationEntry => isEqual(locationEntry, action.payload)) ?? state.locations.push(action.payload);

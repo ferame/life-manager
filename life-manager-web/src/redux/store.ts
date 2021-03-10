@@ -1,7 +1,7 @@
 import { configureStore, ThunkAction, Action, getDefaultMiddleware } from '@reduxjs/toolkit';
 import counterReducer from './reducers/counterSlice';
-import userReducer from './reducers/userSlice';
-import userOptionsReducer from './reducers/userOptionsSlice';
+import userReducer, { initialUserState } from './reducers/userSlice';
+import userOptionsReducer, { initialUserOptionsState } from './reducers/userOptionsSlice';
 import locationsReducer from './reducers/locationsSlice';
 import weatherReducer from './reducers/weatherSlice';
 import thunk from 'redux-thunk';
@@ -20,8 +20,8 @@ export const store = configureStore({
   },
   middleware: [thunk, ...getDefaultMiddleware()],
   preloadedState: {
-    user: persistedState.user,
-    userOptions: persistedState.userOptions
+    user: persistedState?.user ?? initialUserState,
+    userOptions: persistedState?.userOptions ?? initialUserOptionsState
   }
 });
 

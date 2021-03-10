@@ -8,7 +8,7 @@ export interface User {
   isAuthenticated: boolean;
 }
 
-const initialState: User = {
+export const initialUserState: User = {
   username: "",
   token: "",
   isAuthenticated: false
@@ -16,7 +16,7 @@ const initialState: User = {
 
 export const userSlice = createSlice({
   name: 'user',
-  initialState,
+  initialState: initialUserState,
   reducers: {
       authenticateUser: (state, action: PayloadAction<User>) => {
         state.username = action.payload.username;
