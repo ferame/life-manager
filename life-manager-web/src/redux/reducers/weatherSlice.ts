@@ -11,7 +11,7 @@ interface Weather {
   id: string;
 }
 
-interface Location {
+export interface Location {
   city: string;
   country: string;
 }

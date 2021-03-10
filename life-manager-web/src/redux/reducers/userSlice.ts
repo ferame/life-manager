@@ -2,13 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../../redux/store';
 import { updateLocations } from '../reducers/locationsSlice'
 
-interface User {
+export interface User {
   username: string;
   token: string;
   isAuthenticated: boolean;
 }
 
-const initialState: User = {
+export const initialUserState: User = {
   username: "",
   token: "",
   isAuthenticated: false
@@ -16,7 +16,7 @@ const initialState: User = {
 
 export const userSlice = createSlice({
   name: 'user',
-  initialState,
+  initialState: initialUserState,
   reducers: {
       authenticateUser: (state, action: PayloadAction<User>) => {
         state.username = action.payload.username;
@@ -24,8 +24,8 @@ export const userSlice = createSlice({
         state.isAuthenticated = true;
       },
       unauthenticateUser: (state) => {
-        state.username = initialState.username;
-        state.token = initialState.token;
+        state.username = initialUserState.username;
+        state.token = initialUserState.token;
         state.isAuthenticated = false;
       }
   },
