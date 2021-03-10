@@ -5,8 +5,8 @@ import {selectUser} from '../../redux/reducers/userSlice';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import '../weather_forecast/WeatherForecast.style.scss';
-import '../weather_forecast/WeatherIcons.style.scss';
-import weatherConditions from '../weather_forecast/weatherConditions';
+import '../weather_forecast/utils/WeatherIcons.style.scss';
+import weatherConditions from './utils/weatherConditions';
 import { selectLocations, updateLocations } from 'redux/reducers/locationsSlice';
 import { changeLocation, selectUserOptions } from 'redux/reducers/userOptionsSlice';
 
