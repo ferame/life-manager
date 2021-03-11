@@ -1,6 +1,6 @@
 package backend.app.lifemanager.security.token;
 
-import backend.app.lifemanager.security.disabled.token.DisabledTokenService;
+import backend.app.lifemanager.security.cache.TokenService;
 import backend.app.lifemanager.security.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
@@ -29,7 +29,7 @@ public class TokenUtil implements Serializable {
 
   @Lazy
   @Autowired
-  private DisabledTokenService disabledTokenService;
+  private TokenService tokenService;
 
   @Value("${jwt.signing.key.secret}")
   private String secret;
@@ -105,7 +105,7 @@ public class TokenUtil implements Serializable {
     final String username = getUsernameFromToken(token);
     boolean isUsernameCorrect = username.equals(user.getUsername());
     boolean isTokenExpired = isTokenExpired(token);
-    boolean isTokenBlacklisted = disabledTokenService.isTokenDisabled(token);
+    boolean isTokenBlacklisted = tokenService.isTokenDisabled(token);
     return (isUsernameCorrect && !isTokenExpired && !isTokenBlacklisted);
   }
 

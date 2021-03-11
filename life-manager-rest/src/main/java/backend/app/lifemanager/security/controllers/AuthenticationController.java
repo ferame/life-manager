@@ -2,7 +2,7 @@ package backend.app.lifemanager.security.controllers;
 
 import backend.app.lifemanager.basic.BasicResponse;
 import backend.app.lifemanager.security.authentication.AuthenticationException;
-import backend.app.lifemanager.security.disabled.token.DisabledTokenService;
+import backend.app.lifemanager.security.cache.TokenService;
 import backend.app.lifemanager.security.token.TokenRequest;
 import backend.app.lifemanager.security.token.TokenResponse;
 import backend.app.lifemanager.security.token.TokenUtil;
@@ -39,19 +39,19 @@ public class AuthenticationController {
     private final TokenUtil tokenUtil;
     private final UserDetailsService jwtInMemoryUserDetailsService;
     private final InMemoryUserDetailsService inMemoryUserDetailsService;
-    private final DisabledTokenService disabledTokenService;
+    private final TokenService tokenService;
 
     @Autowired
     public AuthenticationController(AuthenticationManager authenticationManager,
                                     TokenUtil tokenUtil,
                                     UserDetailsService jwtInMemoryUserDetailsService,
                                     InMemoryUserDetailsService inMemoryUserDetailsService,
-                                    DisabledTokenService disabledTokenService) {
+                                    TokenService tokenService) {
         this.authenticationManager = authenticationManager;
         this.tokenUtil = tokenUtil;
         this.jwtInMemoryUserDetailsService = jwtInMemoryUserDetailsService;
         this.inMemoryUserDetailsService = inMemoryUserDetailsService;
-        this.disabledTokenService = disabledTokenService;
+        this.tokenService = tokenService;
     }
 
     @PostMapping(value = "${api.user.token.create}")
@@ -77,7 +77,7 @@ public class AuthenticationController {
 
         final ResponseEntity responseEntity;
 
-        if (tokenUtil.canTokenBeRefreshed(token) && !disabledTokenService.isTokenDisabled(token)) {
+        if (tokenUtil.canTokenBeRefreshed(token) && !tokenService.isTokenDisabled(token)) {
             String refreshedToken = tokenUtil.refreshToken(token);
             responseEntity = ResponseEntity.ok(new TokenResponse(refreshedToken));
         } else {
@@ -109,7 +109,7 @@ public class AuthenticationController {
         User user = (User) jwtInMemoryUserDetailsService.loadUserByUsername(username);
 
         BasicResponse response;
-        if (tokenUtil.validateToken(token, user) && disabledTokenService.disableToken(token)) {
+        if (tokenUtil.validateToken(token, user) && tokenService.disableToken(token)) {
             response = new BasicResponse(1L, user.getUsername() + " logged out.");
         } else {
             response = new BasicResponse(1L, "Already logged out.");
