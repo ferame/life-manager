@@ -6,6 +6,9 @@ import backend.app.lifemanager.security.token.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.stream.StreamSupport;
+
 @Service
 public class TokenService {
     final TokenUtil tokenUtil;
@@ -18,43 +21,44 @@ public class TokenService {
         this.tokenUtil = tokenUtil;
     }
 
-
-    public boolean disableToken(String token) {
-        final boolean disablingStatus;
-        if (tokenUtil.isTokenExpired(token)) {
-            disablingStatus = false;
+    public boolean addToken(String token) {
+        final boolean addingStatus;
+        if (tokenRepository.findById(token).isEmpty()) {
+            tokenRepository.save(new Token(token, tokenUtil.getExpirationDateFromToken(token)));
+            addingStatus = true;
         } else {
-            if (tokenRepository.findById(token).isEmpty()) {
-                tokenRepository.save(new Token(token, tokenUtil.getExpirationDateFromToken(token)));
-            }
-            disablingStatus = true;
+            addingStatus = false;
         }
-        return disablingStatus;
+        return addingStatus;
     }
 
     public boolean removeToken(String token) {
         final boolean removingStatus;
-        if (tokenUtil.isTokenExpired(token)) {
-            disablingStatus = false;
+        if (tokenRepository.findById(token).isEmpty()) {
+            tokenRepository.save(new Token(token, tokenUtil.getExpirationDateFromToken(token)));
+            removingStatus = true;
         } else {
-            if (tokenRepository.findById(token).isEmpty()) {
-                tokenRepository.save(new Token(token, tokenUtil.getExpirationDateFromToken(token)));
-            }
-            disablingStatus = true;
+            removingStatus = false;
         }
-        return disablingStatus;
+        return removingStatus;
     }
 
-//    TODO: flip the tokenRepoToBeValidTokenRepo?
+//    Set up a cron job for this one for the half-lifetime of the token
     private void removeExpiredTokens() {
-        tokenRepository.findAll().forEach(token -> {
-            if (tokenUtil.isTokenExpired(token.getId())) {
-                tokenRepository.delete(token);
-            }
-        });
+        StreamSupport.stream(tokenRepository.findAll().spliterator(), true).filter(Token::isExpired).forEach(tokenRepository::delete);
     }
 
-    public boolean isTokenDisabled(String token) {
-        return tokenRepository.findById(token).isPresent();
+    public boolean isTokenValid(String token) {
+        Optional<Token> searchedToken = tokenRepository.findById(token);
+        final boolean isValidToken;
+        if (searchedToken.isPresent() && !searchedToken.get().isExpired()) {
+            isValidToken = true;
+        } else if (searchedToken.isPresent()){
+            removeToken(searchedToken.get().getId());
+            isValidToken = false;
+        } else {
+            isValidToken = false;
+        }
+        return isValidToken;
     }
 }
