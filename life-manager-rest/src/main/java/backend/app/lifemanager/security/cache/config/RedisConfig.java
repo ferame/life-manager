@@ -1,8 +1,8 @@
-package backend.app.lifemanager.security.disabled.token.config;
+package backend.app.lifemanager.security.cache.config;
 
-import backend.app.lifemanager.security.disabled.token.queue.MessagePublisher;
-import backend.app.lifemanager.security.disabled.token.queue.RedisMessagePublisher;
-import backend.app.lifemanager.security.disabled.token.queue.RedisMessageSubscriber;
+import backend.app.lifemanager.security.cache.queue.MessagePublisher;
+import backend.app.lifemanager.security.cache.queue.RedisMessagePublisher;
+import backend.app.lifemanager.security.cache.queue.RedisMessageSubscriber;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 
 @Configuration
 @ComponentScan("backend.app.lifemanager.security.disabled.token")
-@EnableRedisRepositories(basePackages = "backend.app.lifemanager.security.disabled.token.repo")
+@EnableRedisRepositories(basePackages = "backend.app.lifemanager.security.cache.repo")
 @PropertySource("classpath:application.properties")
 public class RedisConfig {
     @Bean

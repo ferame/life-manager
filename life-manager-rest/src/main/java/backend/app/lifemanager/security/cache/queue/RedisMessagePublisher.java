@@ -1,4 +1,4 @@
-package backend.app.lifemanager.security.disabled.token.queue;
+package backend.app.lifemanager.security.cache.queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

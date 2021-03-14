@@ -1,12 +1,13 @@
 package backend.app.lifemanager.security.token;
 
-import backend.app.lifemanager.security.disabled.token.DisabledTokenService;
+import backend.app.lifemanager.security.cache.TokenService;
 import backend.app.lifemanager.security.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClock;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -17,8 +18,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
+@Slf4j
 @Component
 public class TokenUtil implements Serializable {
 
@@ -29,7 +32,7 @@ public class TokenUtil implements Serializable {
 
   @Lazy
   @Autowired
-  private DisabledTokenService disabledTokenService;
+  private TokenService tokenService;
 
   @Value("${jwt.signing.key.secret}")
   private String secret;
@@ -58,19 +61,15 @@ public class TokenUtil implements Serializable {
     return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
   }
 
-  public Boolean isTokenExpired(String token) {
-    final Date expiration = getExpirationDateFromToken(token);
-    return expiration.before(clock.now());
-  }
-
   private Boolean ignoreTokenExpiration(String token) {
     // here you specify tokens, for that the expiration is ignored
     return false;
   }
 
-  public String generateToken(org.springframework.security.core.userdetails.UserDetails userDetails) {
+  public Optional<String> generateToken(org.springframework.security.core.userdetails.UserDetails userDetails) {
     Map<String, Object> claims = new HashMap<>();
-    return doGenerateToken(claims, userDetails.getUsername());
+    String generatedToken = doGenerateToken(claims, userDetails.getUsername());
+    return tokenService.addToken(generatedToken) ? Optional.of(generatedToken) : Optional.empty();
   }
 
   private String doGenerateToken(Map<String, Object> claims, String subject) {
@@ -86,7 +85,7 @@ public class TokenUtil implements Serializable {
   }
 
   public Boolean canTokenBeRefreshed(String token) {
-    return (!isTokenExpired(token) || ignoreTokenExpiration(token));
+    return (tokenService.isTokenValid(token) || ignoreTokenExpiration(token));
   }
 
   public String refreshToken(String token) {
@@ -96,22 +95,37 @@ public class TokenUtil implements Serializable {
     final Claims claims = getAllClaimsFromToken(token);
     claims.setIssuedAt(createdDate);
     claims.setExpiration(expirationDate);
+    String refreshedToken = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
+    if (!tokenService.removeToken(token)) {
+      log.warn("Failed to remove token {}", token);
+    }
+    if (!tokenService.addToken(refreshedToken)) {
+      log.warn("Failed to add token {}", refreshedToken);
+    }
+    return refreshedToken;
+  }
 
-    return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
+  private Boolean isUsernameCorrect (String token, User user) {
+    final String username = getUsernameFromToken(token);
+    return username.equals(user.getUsername());
   }
 
   public Boolean validateToken(String token, UserDetails userDetails) {
-    User user = (User) userDetails;
-    final String username = getUsernameFromToken(token);
-    boolean isUsernameCorrect = username.equals(user.getUsername());
-    boolean isTokenExpired = isTokenExpired(token);
-    boolean isTokenBlacklisted = disabledTokenService.isTokenDisabled(token);
-    return (isUsernameCorrect && !isTokenExpired && !isTokenBlacklisted);
+    return isUsernameCorrect(token, (User) userDetails) && tokenService.isTokenValid(token);
   }
 
-  public Boolean invalidateToken(String token, UserDetails userDetails) {
-//    TODO: implement token invalidation
-    return false;
+  public Boolean invalidateToken(String token, User user) {
+    final boolean invalidationStatus;
+    if (isUsernameCorrect(token, user)){
+      if (tokenService.isTokenValid(token)){
+        invalidationStatus = tokenService.removeToken(token);
+      } else {
+        invalidationStatus = true;
+      }
+    } else {
+      invalidationStatus = false;
+    }
+    return invalidationStatus;
   }
 
   private Date calculateExpirationDate(Date createdDate) {

@@ -1,4 +1,4 @@
-package backend.app.lifemanager.security.disabled.token.queue;
+package backend.app.lifemanager.security.cache.queue;
 
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;

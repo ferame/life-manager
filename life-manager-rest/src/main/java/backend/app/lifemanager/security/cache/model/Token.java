@@ -1,5 +1,7 @@
-package backend.app.lifemanager.security.disabled.token.model;
+package backend.app.lifemanager.security.cache.model;
 
+import io.jsonwebtoken.Clock;
+import io.jsonwebtoken.impl.DefaultClock;
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -11,13 +13,18 @@ import java.util.Date;
 @NoArgsConstructor
 @EqualsAndHashCode
 @RedisHash("DisabledToken")
-public class DisabledToken implements Serializable {
+public class Token implements Serializable {
     private static final long serialVersionUID = 1603714798906422731L;
+    private static final Clock clock = DefaultClock.INSTANCE;
     private String id;
     private Date expirationDate;
 
     @Override
     public String toString() {
         return "DisabledToken{" + "id='" + id + '\'' + ", expirationDate='" + expirationDate + "\'}";
+    }
+
+    public boolean isExpired() {
+        return expirationDate.before(clock.now());
     }
 }
