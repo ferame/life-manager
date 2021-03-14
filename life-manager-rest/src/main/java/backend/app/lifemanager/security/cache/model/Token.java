@@ -15,9 +15,9 @@ import java.util.Date;
 @RedisHash("DisabledToken")
 public class Token implements Serializable {
     private static final long serialVersionUID = 1603714798906422731L;
+    private static final Clock clock = DefaultClock.INSTANCE;
     private String id;
     private Date expirationDate;
-    private final Clock clock = DefaultClock.INSTANCE;
 
     @Override
     public String toString() {
