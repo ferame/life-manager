@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import { AppThunk, RootState } from '../store';
 
-interface Location {
+export interface Location {
     city: string;
     country: string;
 }

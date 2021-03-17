@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../redux/store';
 // import { some, isEqual } from 'lodash';
-import { Location } from './weatherSlice';
+import { Location } from './locationsSlice';
 
 export interface UserOptions {
   location: Location; //TODO: change to array later
@@ -32,6 +32,6 @@ export const userOptionsSlice = createSlice({
 
 export const { changeLocation/*, addLocation, removeLocation*/ } = userOptionsSlice.actions;
 
-export const selectUserOptions = (state: RootState) => state.userOptions;
+export const selectUserOptions = (state: RootState) => state.userOptions as UserOptions;
 
 export default userOptionsSlice.reducer;

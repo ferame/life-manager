@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../store';
 import Axios from 'axios';
+import { Location } from './locationsSlice';
 
 interface Weather {
   location: Location;
@@ -9,11 +10,6 @@ interface Weather {
   rainfall: number;
   description: string;
   id: string;
-}
-
-export interface Location {
-  city: string;
-  country: string;
 }
 
 const initialState: Weather = {

@@ -7,13 +7,8 @@ import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete
 import '../weather_forecast/WeatherForecast.style.scss';
 import '../weather_forecast/utils/WeatherIcons.style.scss';
 import weatherConditions from './utils/weatherConditions';
-import { selectLocations, updateLocations } from 'redux/reducers/locationsSlice';
+import { selectLocations, updateLocations, Location } from 'redux/reducers/locationsSlice';
 import { changeLocation, selectUserOptions } from 'redux/reducers/userOptionsSlice';
-
-interface Location {
-    city: string;
-    country: string;
-}
 
 const getWeatherIconName = (forecastId: string) => {
     return weatherConditions.find(entry => entry.id === parseInt(forecastId))?.icon ?? "sunny";
