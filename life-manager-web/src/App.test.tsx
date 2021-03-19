@@ -5,7 +5,7 @@ import { store } from './redux/store';
 import App from './App';
 import { MemoryRouter } from 'react-router-dom';
 
-test('renders react link for registration', () => {
+test('renders App', () => {
   const screenRender = render(
     <Provider store={store}>
       <MemoryRouter>
@@ -14,5 +14,6 @@ test('renders react link for registration', () => {
     </Provider>
   );
 
+  expect(screenRender.getByText(/News/i)).toBeInTheDocument();
   expect(screenRender.getByText(/register/i)).toBeInTheDocument();
 });
