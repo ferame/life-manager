@@ -41,8 +41,8 @@ export default function TopBar() {
               <Typography variant="h6" className={classes.title}>
                   News
               </Typography>
-              {user.isAuthenticated ? null : <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>}
-              {user.isAuthenticated ? null : <Button color="inherit" onClick={() => history.push('/register')}>Register</Button>}
+              {user.isAuthenticated ? null : <Button data-testid="login-button" color="inherit" onClick={() => history.push('/login')}>Login</Button>}
+              {user.isAuthenticated ? null : <Button data-testid="register-button" color="inherit" onClick={() => history.push('/register')}>Register</Button>}
               {user.isAuthenticated ? <Typography>{user.username.toUpperCase()}</Typography> : null}
               <UserMenu />
             </Toolbar>
