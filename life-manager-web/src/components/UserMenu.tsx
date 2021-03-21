@@ -17,12 +17,12 @@ const StyledMenu = withStyles({
         elevation={0}
         getContentAnchorEl={null}
         anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'center',
+            vertical: 'bottom',
+            horizontal: 'center',
         }}
         transformOrigin={{
-        vertical: 'top',
-        horizontal: 'center',
+            vertical: 'top',
+            horizontal: 'center',
         }}
         {...props}
     />
@@ -46,6 +46,7 @@ export default function UserMenu(){
     return (
         <div>
             <IconButton
+                data-testid="user-menu-button"
                 edge='end'
                 aria-label='account of current user'
                 aria-controls={'user-menu-button'}
