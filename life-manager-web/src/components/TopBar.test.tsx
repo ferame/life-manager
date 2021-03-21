@@ -5,6 +5,7 @@ import userReducer, { User } from '../redux/reducers/userSlice';
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
 import TopBar from './TopBar';
+import { MemoryRouter } from 'react-router-dom';
 
 const renderComponent = (userState: User) => render(
     <Provider store={
@@ -18,26 +19,30 @@ const renderComponent = (userState: User) => render(
             }
         }
     )}>
-        <TopBar/>
+        <MemoryRouter>
+            <TopBar/>
+        </MemoryRouter>
     </Provider>
 );
   
-test('renders react link for registration when unauthenticated', () => {
+test('renders title', () => {
     const screenRender = renderComponent({
         username: "",
         token: "",
         isAuthenticated: false
     });
-    expect(screenRender.getByTestId('register-button')).toBeInTheDocument();
-});
+    expect(screenRender.getByText(/News/i)).toBeInTheDocument();
+})
 
-test('renders react link for login when unauthenticated', () => {
+test('correct buttons shown when unauthenticated', () => {
     const screenRender = renderComponent({
         username: "",
         token: "",
         isAuthenticated: false
     });
     expect(screenRender.getByTestId('login-button')).toBeInTheDocument();
+    expect(screenRender.getByTestId('register-button')).toBeInTheDocument();
+    expect(screenRender.getAllByRole('button')).toHaveLength(6);
 });
 
 test('correct buttons shown when Authenticated', () => {
@@ -49,4 +54,5 @@ test('correct buttons shown when Authenticated', () => {
     expect(screenRender.queryByTestId('register-button')).not.toBeInTheDocument();
     expect(screenRender.queryByTestId('login-button')).not.toBeInTheDocument();
     expect(screenRender.getByText(/TestUsername/i)).toBeInTheDocument();
+    expect(screenRender.getAllByRole('button')).toHaveLength(4);
 });
