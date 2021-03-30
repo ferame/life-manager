@@ -2,7 +2,6 @@ package backend.app.lifemanager.security.controllers;
 
 import backend.app.lifemanager.basic.BasicResponse;
 import backend.app.lifemanager.security.authentication.AuthenticationException;
-import backend.app.lifemanager.security.cache.TokenService;
 import backend.app.lifemanager.security.token.TokenRequest;
 import backend.app.lifemanager.security.token.TokenResponse;
 import backend.app.lifemanager.security.token.TokenUtil;
