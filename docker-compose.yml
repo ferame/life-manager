@@ -9,8 +9,12 @@ services:
       context: life-manager-rest # Use an image built from the specified dockerfile in the `polling-app-server` directory.
       dockerfile: Dockerfile
     ports:
-      - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+      - 3030:80 # Forward the exposed port 8080 on the container to port 8080 on the host machine
     restart: always
+    links:
+      - app-cache:redis
+    depends_on:
+      - app-cache
 #    depends_on:
 #      - db # This service depends on mysql. Start that first.
 #    environment: # Pass environment variables to the service
@@ -29,13 +33,21 @@ services:
       args:
         REACT_APP_API_BASE_URL: http://127.0.0.1:8080/api
     ports:
-      - "9090:80" # Forward the exposed port 80 on the container to port 80 on the host machine
+      - 9090:80 # Forward the exposed port 80 on the container to port 80 on the host machine
     restart: always
     depends_on:
       - app-server
     networks:
       - frontend
 
+  app-cache:
+    image: redis:6.2-alpine
+    hostname: redis
+#    command: redis-server
+    networks:
+      - backend
+#    ports:
+#    - 6379:6379
   # Database Service (Mysql)
 #  db:
 #    image: mysql:5.7
