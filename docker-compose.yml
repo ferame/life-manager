@@ -46,6 +46,7 @@ services:
     command: ["redis-server", "--bind", "redis", "--port", "6379", "--protected-mode", "no"]
     networks:
       - backend
+      - frontend
     ports:
       - 6379:6379
   # Database Service (Mysql)
