@@ -41,12 +41,14 @@ services:
       - frontend
 
   redis:
-    image: redis:6.2
+    image: redis:latest
     hostname: redis
-    command: ["redis-server", "--bind", "redis", "--port", "6379", "--protected-mode", "no"]
+    command: ["redis-server", "--bind", "redis", "--port", "6379"]
     networks:
       - backend
       - frontend
+    volumes:
+      - /life-manager-cache/redis.conf
     ports:
       - 6379:6379
   # Database Service (Mysql)
