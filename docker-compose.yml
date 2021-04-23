@@ -25,6 +25,16 @@ services:
       - backend
       - frontend
 
+  # App caching service
+  redis:
+    image: redis:latest
+    hostname: redis
+    command: ["redis-server", "--bind", "redis", "--port", "6379"]
+    networks:
+      - backend
+    ports:
+      - 6379:6379
+
   # Frontend Service
   app-client:
     build:
@@ -40,17 +50,6 @@ services:
     networks:
       - frontend
 
-  redis:
-    image: redis:latest
-    hostname: redis
-    command: ["redis-server", "--bind", "redis", "--port", "6379"]
-    networks:
-      - backend
-      - frontend
-    volumes:
-      - /life-manager-cache/redis.conf
-    ports:
-      - 6379:6379
   # Database Service (Mysql)
 #  db:
 #    image: mysql:5.7
@@ -74,5 +73,4 @@ volumes:
 # Networks to be created to facilitate communication between containers
 networks:
   backend:
-    driver: bridge
   frontend:
