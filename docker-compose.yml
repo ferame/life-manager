@@ -13,6 +13,8 @@ services:
     restart: always
     links:
       - redis
+    environment:
+      redis_server_addr: redis
     depends_on:
       - redis
 #    depends_on:
@@ -29,7 +31,6 @@ services:
   redis:
     image: redis:latest
     hostname: redis
-    command: ["redis-server", "--bind", "redis", "--port", "6379"]
     networks:
       - backend
     ports:
