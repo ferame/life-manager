@@ -3,7 +3,6 @@ package backend.app.lifemanager.security.cache.config;
 import backend.app.lifemanager.security.cache.queue.MessagePublisher;
 import backend.app.lifemanager.security.cache.queue.RedisMessagePublisher;
 import backend.app.lifemanager.security.cache.queue.RedisMessageSubscriber;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
