@@ -2,14 +2,18 @@ import React from 'react';
 import { useState } from 'react';
 import axios from "axios";
 
+const apiUrl = 'http://localhost:8080';
+
 export default function Register () {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-
+    
     function handleSubmit (e:any) {
         e.preventDefault();
-        axios.post("/register", {
+        const callUrl = apiUrl + "/register";
+        console.log(`Posting to url: ${callUrl}`)
+        axios.post(callUrl, {
             username: username,
             password: password,
             matchingPassword: password,
