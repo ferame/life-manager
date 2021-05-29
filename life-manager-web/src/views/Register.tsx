@@ -11,7 +11,8 @@ export default function Register () {
     
     function handleSubmit (e:any) {
         e.preventDefault();
-        const callUrl = apiUrl + "/register";
+        // const callUrl = apiUrl + "/register";
+        const callUrl = 'http://localhost:8080' + '/register';
         console.log(`Posting to url: ${callUrl}`)
         axios.post(callUrl, {
             username: username,
