@@ -2,8 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import axios from "axios";
 
-const apiUrl = 'http://localhost:8080';
-
 export default function Register () {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -11,8 +9,9 @@ export default function Register () {
     
     function handleSubmit (e:any) {
         e.preventDefault();
-        // const callUrl = apiUrl + "/register";
-        const callUrl = 'http://localhost:8080' + '/register';
+        const callUrl = process.env.REACT_APP_API_BASE_URL + '/register';
+        console.log('Is it the new code even?');
+        console.log(`The env is ${process.env.REACT_APP_API_BASE_URL}`);
         console.log(`Posting to url: ${callUrl}`)
         axios.post(callUrl, {
             username: username,
