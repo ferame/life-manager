@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../store';
 import Axios from 'axios';
 import { Location } from './locationsSlice';
+import { axiosInstance } from 'config';
 
 interface Weather {
   location: Location;
@@ -48,7 +49,7 @@ export const weatherSlice = createSlice({
 export const { setLocation, setTemperature, setForecast } = weatherSlice.actions;
 
 export const updateForecast = (userToken: string, location: Location): AppThunk => dispatch => {
-    Axios.get(`api/weather/current/${location.country}/${location.city}`, {
+    axiosInstance.get(`api/weather/current/${location.country}/${location.city}`, {
       headers: {
         'Authorization': `Bearer ${userToken}`
       }

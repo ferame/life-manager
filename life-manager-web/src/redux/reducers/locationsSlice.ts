@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import Axios from 'axios';
+import { axiosInstance } from 'config';
 import { AppThunk, RootState } from '../store';
 
 export interface Location {
@@ -29,7 +29,7 @@ export const { updateLocs } = locationsSlice.actions;
 
 export const updateLocations = (userToken: string): AppThunk => dispatch => {
     console.log("Updating locations");
-    Axios.get('api/weather/locations', {
+    axiosInstance.get('api/weather/locations', {
         headers: {
             'Authorization': `Bearer ${userToken}`
           }

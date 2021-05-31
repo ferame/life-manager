@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import { axiosInstance } from 'config';
 import React from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,7 +19,7 @@ export default function Login () {
     
     function handleSubmit (e:any) {
         e.preventDefault();
-        Axios.post("/authenticate", {
+        axiosInstance.post("/authenticate", {
             username: username,
             password: password
         })
