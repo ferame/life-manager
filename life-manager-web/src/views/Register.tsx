@@ -1,6 +1,5 @@
 import React from 'react';
 import { useState } from 'react';
-import axios from "axios";
 import { axiosInstance } from 'config';
 
 export default function Register () {

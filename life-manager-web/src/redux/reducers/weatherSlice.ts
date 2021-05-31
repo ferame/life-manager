@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../store';
-import Axios from 'axios';
 import { Location } from './locationsSlice';
 import { axiosInstance } from 'config';
 
