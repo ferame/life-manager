@@ -28,7 +28,7 @@ import static backend.app.lifemanager.security.user.InMemoryUserDetailsService.i
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:4200", "http://localhost:80", "http://localhost:8080", "http://localhost:9090"})
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:9090"})
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
