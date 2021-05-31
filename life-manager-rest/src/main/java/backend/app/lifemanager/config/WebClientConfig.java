@@ -1,4 +1,4 @@
-package backend.app.lifemanager.external.calls;
+package backend.app.lifemanager.config;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.springframework.context.annotation.Bean;

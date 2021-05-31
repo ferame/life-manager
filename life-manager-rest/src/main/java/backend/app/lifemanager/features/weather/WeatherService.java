@@ -1,6 +1,5 @@
 package backend.app.lifemanager.features.weather;
 
-import backend.app.lifemanager.features.location.LocationService;
 import backend.app.lifemanager.features.weather.dao.weather.WeatherForecast;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
