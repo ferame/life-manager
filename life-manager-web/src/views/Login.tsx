@@ -1,9 +1,9 @@
-import Axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { selectUser, authenticateUser } from '../redux/reducers/userSlice';
+import { axiosInstance } from 'config';
 
 export default function Login () {
     let history = useHistory();
@@ -18,7 +18,7 @@ export default function Login () {
     
     function handleSubmit (e:any) {
         e.preventDefault();
-        Axios.post("/authenticate", {
+        axiosInstance.post("/authenticate", {
             username: username,
             password: password
         })

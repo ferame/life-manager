@@ -1,4 +1,4 @@
-package backend.app.lifemanager.swagger;
+package backend.app.lifemanager.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

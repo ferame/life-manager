@@ -2,7 +2,6 @@ package backend.app.lifemanager.security.controllers;
 
 import backend.app.lifemanager.basic.BasicResponse;
 import backend.app.lifemanager.security.authentication.AuthenticationException;
-import backend.app.lifemanager.security.cache.TokenService;
 import backend.app.lifemanager.security.token.TokenRequest;
 import backend.app.lifemanager.security.token.TokenResponse;
 import backend.app.lifemanager.security.token.TokenUtil;
@@ -29,16 +28,15 @@ import static backend.app.lifemanager.security.user.InMemoryUserDetailsService.i
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:4200"})
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:9090"})
 public class AuthenticationController {
-
-    @Value("${jwt.http.request.header}")
-    private String tokenHeader;
 
     private final AuthenticationManager authenticationManager;
     private final TokenUtil tokenUtil;
     private final UserDetailsService jwtInMemoryUserDetailsService;
     private final InMemoryUserDetailsService inMemoryUserDetailsService;
+    @Value("${jwt.http.request.header}")
+    private String tokenHeader;
 
     @Autowired
     public AuthenticationController(AuthenticationManager authenticationManager,
